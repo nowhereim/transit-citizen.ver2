@@ -1,15 +1,15 @@
 const express = require("express");
 const Http = require("http");
 const session = require("express-session");
-const routes = require("./routes");
+const routes = require("./src/routes");
 const app = express();
 const cors = require("cors");
 const server = require("http").createServer(app);
 const upload = require("./upload");
 // const deleteim = require("./randomChat/delete");
-const connect = require("./schemas");
+const connect = require("./src/schemas");
 const cloudinaryConfig = require("./config/cloudconfig");
-const authMiddleware = require("./middlewares/auth_middleware.js");
+const authMiddleware = require("./src/middlewares/auth_middleware.js");
 const helmet = require("helmet");
 const morgan = require("morgan");
 

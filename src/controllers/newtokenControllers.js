@@ -1,5 +1,5 @@
-const logger = require("../utils/logger");
-const redis = require("../utils/redis");
+const logger = require("../../utils/logger");
+const redis = require("../../utils/redis");
 const jwt = require("jsonwebtoken");
 // const { promisify } = require("util");
 // const getAsync = promisify(redis.get).bind(redis);
