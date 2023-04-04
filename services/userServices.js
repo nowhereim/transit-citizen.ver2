@@ -2,7 +2,7 @@ const cloudinary = require("cloudinary");
 const DatauriParser = require("datauri/parser");
 const parser = new DatauriParser();
 const userRepositories = require("../repositories/userRepositories");
-
+const redis = require("../utils/redis");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 // const Token = require("../schemas/token");
@@ -81,55 +81,24 @@ class userServices {
 
   login = async (snsId, password) => {
     const userInfo = await this.userRepositories.getUserInfo(snsId);
-    // console.log("userInfo-->", userInfo);
-    console.log(123);
     if (!userInfo) {
       throw new Error("아이디 또는 비밀번호가 일치하지 않습니다.");
     }
-    console.log(123);
-    // const same = bcrypt.compareSync(password, userInfo.password);
-    // if (!same) {
-    //   throw new Error("아이디 또는 비밀번호가 일치하지 않습니다.");
-    // }
-    console.log(123);
-    // const donePhoneNumber = (!userInfo.phoneNumber) ? false : true;
-
-    // const doneAdditionalInfo =
-    //   !userInfo.nickname || !userInfo.representProfile ? false : true;
-
-    const tokenInfo = await this.tokenRepository.getTokenInfo(snsId);
-
-    if (!tokenInfo) {
-      // 최초 로그인
-      const token = jwt.sign({ snsId: snsId }, process.env.SECRET_KEY, {
+    try {
+      const token = jwt.sign({ snsId: snsId }, process.env.JWT_SECRET, {
+        expiresIn: "1s",
+      });
+      const refreshToken = jwt.sign({ snsId: snsId }, process.env.JWT_SECRET, {
         expiresIn: "24h",
       });
-      const refreshToken = jwt.sign({}, process.env.SECRET_KEY, {
-        expiresIn: "240h",
-      });
-      await this.tokenRepository.createToken(snsId, token, refreshToken);
 
-      return {
-        jwtToken: token,
-        // donePhoneNumber: donePhoneNumber,
-        // doneAdditionalInfo: doneAdditionalInfo,
-        message: "로그인하였습니다.",
-      };
-    } else {
-      const token = jwt.sign({ snsId: snsId }, process.env.SECRET_KEY, {
-        expiresIn: "24h",
-      });
-      const refreshToken = jwt.sign({}, process.env.SECRET_KEY, {
-        expiresIn: "240h",
-      });
-      await this.tokenRepository.updateToken(snsId, token, refreshToken);
+      redis.set(`${snsId}ref`, refreshToken);
+      redis.set(`${snsId}acc`, token);
 
-      return {
-        jwtToken: token,
-        // donePhoneNumber: donePhoneNumber,
-        // doneAdditionalInfo: doneAdditionalInfo,
-        message: "로그인하였습니다.",
-      };
+      return token;
+    } catch (error) {
+      console.log(error);
+      return error;
     }
   };
 

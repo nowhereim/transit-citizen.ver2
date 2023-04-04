@@ -23,7 +23,7 @@ class userControllers {
 
   getRepeuiredUserInfo = async (req, res, next) => {
     try {
-      const snsId = res.locals.user.user.snsId;
+      const snsId = res.locals.user.snsId;
       const representProfile = req.file.buffer;
       const { nickname, gender } = req.body;
       if (!snsId)
@@ -47,7 +47,7 @@ class userControllers {
       next(error);
     }
   };
-
+  // TODO: 삭제필요해보임
   nicknameCheck = async (req, res) => {
     try {
       const { nickname } = req.body;
@@ -82,7 +82,7 @@ class userControllers {
       // console.log("password-->", password);
       const userData = await this.userServices.login(snsId, password);
 
-      res.status(200).send(userData);
+      res.status(200).send({ acctoken: userData });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
