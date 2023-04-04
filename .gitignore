@@ -16,3 +16,4 @@ sound
 labels.*
 utils
 logs
+config/config.json

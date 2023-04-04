@@ -12,6 +12,7 @@ const cloudinaryConfig = require("./config/cloudconfig");
 const authMiddleware = require("./src/middlewares/auth_middleware.js");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const { User } = require("./src/models");
 
 app.use(morgan("combined"));
 app.use(helmet.frameguard());
@@ -59,5 +60,9 @@ app.post("/uploadFile", upload.single("image"), (req, res) => {
 app.use((error, req, res, next) => {
   res.status(500).json({ message: error.message });
 });
+
+// app.listen(3000, () => {
+//   console.log("server is running on port 3000");
+// });
 
 module.exports = server;
