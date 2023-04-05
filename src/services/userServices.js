@@ -1,13 +1,8 @@
-const cloudinary = require("cloudinary");
-const DatauriParser = require("datauri/parser");
-const parser = new DatauriParser();
 const userRepositories = require("../repositories/userRepositories");
 // const redis = require("../../utils/redis");
 const jwt = require("jsonwebtoken");
 const { User, Image, sequelize } = require("../models");
 const bcrypt = require("bcrypt");
-// const Token = require("../schemas/token");
-const TokenRepository = require("../repositories/token.repository");
 const redis = require("../../utils/redis");
 const uploadImagesToS3 = require("../../utils/s3Upload");
 //트랜잭션
@@ -19,11 +14,7 @@ class UploadError extends Error {
   }
 }
 class userServices {
-  tokenRepository = new TokenRepository();
-
-  constructor() {
-    this.userRepositories = new userRepositories();
-  }
+  constructor() {}
 
   createLocalUserInfo = async (loginval) => {
     try {
