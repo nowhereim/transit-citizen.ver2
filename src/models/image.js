@@ -10,12 +10,6 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "no action",
         onUpdate: "no action",
       });
-      // Image.belongsTo(models.User, {
-      //   foreignKey: "Imageer",
-      //   targetKey: "id",
-      //   onDelete: "no action",
-      //   onUpdate: "no action",
-      // });
     }
   }
   Image.init(
