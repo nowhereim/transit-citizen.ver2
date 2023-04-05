@@ -8,7 +8,6 @@ package-lock.json
 delete.*
 upload.*
 sdFucntion.*
-schemas
 functionstuff.*
 dbpassFunction.*
 routes

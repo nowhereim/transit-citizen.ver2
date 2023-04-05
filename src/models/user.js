@@ -128,6 +128,7 @@ module.exports = (sequelize, DataTypes) => {
         field: "user_id",
       },
       // email: DataTypes.STRING,
+      account: DataTypes.STRING,
       password: DataTypes.STRING,
       nickname: DataTypes.STRING,
       agreepi: DataTypes.BOOLEAN,
