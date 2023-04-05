@@ -40,7 +40,7 @@ module.exports = async (req, res, next) => {
       });
     } else if (veresult === true) {
       const decoded = jwt.decode(tokenValue);
-      res.locals.snsId = decoded.snsId;
+      res.locals.account = decoded.account;
       next();
     }
   } catch (e) {
