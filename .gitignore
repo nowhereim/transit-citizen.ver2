@@ -15,5 +15,5 @@ sound
 labels.*
 utils
 logs
-config/config.json
+config.json
 socialControllers.js
