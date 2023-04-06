@@ -1,13 +1,6 @@
-const cloudinary = require("cloudinary");
-const DatauriParser = require("datauri/parser");
-const parser = new DatauriParser();
-const userRepositories = require("../repositories/userRepositories");
-// const redis = require("../../utils/redis");
 const jwt = require("jsonwebtoken");
 const { User, Image, sequelize } = require("../models");
 const bcrypt = require("bcrypt");
-// const Token = require("../schemas/token");
-const TokenRepository = require("../repositories/token.repository");
 const redis = require("../../utils/redis");
 const uploadImagesToS3 = require("../../utils/s3Upload");
 //트랜잭션
@@ -19,11 +12,7 @@ class UploadError extends Error {
   }
 }
 class userServices {
-  tokenRepository = new TokenRepository();
-
-  constructor() {
-    this.userRepositories = new userRepositories();
-  }
+  constructor() {}
 
   createLocalUserInfo = async (loginval) => {
     try {
@@ -40,29 +29,33 @@ class userServices {
 
   login = async (loginval) => {
     try {
-      const result = await User.findOne({
+      const finduser = await User.findOne({
         where: { account: loginval.account },
-        attributes: ["user_id", "account", "nickname"],
+        attributes: ["user_id", "account", "nickname", "password"],
       });
-      const verifypw = await bcrypt.compare(loginval.password, result.password);
+      const { password, ...rest } = finduser.dataValues;
+      console.log(rest);
+      const verifypw = await bcrypt.compare(loginval.password, password);
+      console.log(verifypw);
       if (verifypw) {
         const token = jwt.sign(
-          { account: result.account },
+          { account: rest.account },
           process.env.JWT_SECRET,
           {
             expiresIn: "1m",
           },
         );
         const refreshToken = jwt.sign(
-          { account: result.account },
+          { account: rest.account },
           process.env.JWT_SECRET,
           {
             expiresIn: "24h",
           },
         );
-        redis.set(`${result.account}ref`, refreshToken);
-        redis.set(`${result.account}acc`, token);
-        return { token, result };
+        redis.set(`${rest.account}ref`, refreshToken);
+        redis.set(`${rest.account}acc`, token);
+
+        return { token, rest };
       } else {
         return false;
       }
@@ -106,44 +99,24 @@ class userServices {
     }
   };
 
-  uploadImage = async (id, primaryImage, otherImages, edit) => {
+  uploadImage = async (id, primaryImage, otherImages) => {
     let result = [];
+    console.log(primaryImage);
+    const pc = primaryImage ? 1 : 0;
+    const oc = otherImages ? otherImages.length : 0;
+    const count = pc + oc;
     try {
-      console.time("uploadImage");
+      console.time("uploadImaget");
       await sequelize.transaction(async (t) => {
-        // 트랜잭션 시작
-        console.time("edit");
-        if (edit.length !== 0) {
-          let count = 0;
-          for (let i = 0; i < edit.length; i++) {
-            const destroy = await Image.destroy(
-              {
-                where: { user_id: id, image_url: edit[i].editimage },
-              },
-              { transaction: t },
-            );
-
-            count += destroy;
-          }
-          result.push(`삭제된 데이터는 총 : ${count}개 입니다.`);
-        }
-        console.timeEnd("edit");
         console.time("primarysearch");
         const primary = await Image.findAll({
           where: { user_id: id },
         });
-        if (primary.length >= 5) {
+        console.log(primary);
+        if (primary.length + count > 5) {
           throw new UploadError("이미지는 최대 5개까지 등록 가능합니다.");
         }
-
         if (primaryImage) {
-          const primaryImages = primary.find((image) => image.is_primary);
-
-          if (primaryImages) {
-            throw new UploadError("대표이미지가 이미 존재합니다.");
-          }
-          console.timeEnd("primarysearch");
-          console.time("pi");
           // console.log(primaryImage);
           const pi = (await uploadImagesToS3(primaryImage, otherImages)).filter(
             (image) => image.is_primary,
@@ -160,6 +133,22 @@ class userServices {
             { transaction: t },
           );
           result.push(Presult);
+          if (primary.length !== 0) {
+            const primaryImages = primary.find((image) => image.is_primary);
+            console.log("============primaryImages============");
+            console.log(primaryImages);
+            console.log("============primaryImages============");
+            const updatePrimary = await Image.update(
+              { is_primary: false },
+              { where: { image_id: primaryImages.id, is_primary: true } },
+              { transaction: t },
+            );
+            console.log("============updatePrimary============");
+            console.log(updatePrimary);
+            console.log("============updatePrimary============");
+            console.timeEnd("primarysearch");
+            console.time("pi");
+          }
         }
         if (otherImages) {
           const otherImagesCount = primary.filter(
@@ -194,7 +183,7 @@ class userServices {
         }
       });
       console.timeEnd("oi");
-      console.timeEnd("uploadImage");
+      console.timeEnd("uploadImaget");
       return result;
     } catch (error) {
       console.log(error);
@@ -207,6 +196,42 @@ class userServices {
       const result = await User.update(userval, {
         where: { user_id: id },
       });
+      if (!result) {
+        throw new Error("수정할 데이터가 없습니다.");
+      }
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  deleteImages = async (id, images) => {
+    try {
+      console.log(id, images);
+      const result = [];
+      for (let i = 0; i < images.length; i++) {
+        const dtresult = await Image.destroy({
+          where: { user_id: id, image_url: images[i].url },
+        });
+        result.push(dtresult);
+      }
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  patchImages = async (id, images) => {
+    try {
+      const result = [];
+      console.log(images);
+      for (let i = 0; i < images.length; i++) {
+        const dtresult = await Image.update(
+          { is_primary: images[i].is_primary },
+          { where: { user_id: id, image_url: images[i].url } },
+        );
+        result.push(dtresult);
+      }
       return result;
     } catch (error) {
       throw error;

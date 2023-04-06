@@ -6,8 +6,7 @@ const connect = () => {
   }
 
   mongoose.connect(
-    // process.env.MONGOOSE_URL,
-    "mongodb+srv://cipal:sipal@aso.2fruiog.mongodb.net/?retryWrites=true&w=majority",
+    process.env.MONGOOSE_URL,
 
     { dbName: "ASOproject" },
     (error) => {

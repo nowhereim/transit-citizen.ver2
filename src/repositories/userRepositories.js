@@ -32,7 +32,7 @@ class userRepositories {
       if (snsId) {
         const createdUserInfoData = await User.findOneAndUpdate(
           { snsId },
-          { representProfile }
+          { representProfile },
         );
         return createdUserInfoData;
       } else {
@@ -51,7 +51,7 @@ class userRepositories {
         return deletedProfileData;
       } else {
         throw new Error(
-          "snsId 값이 없으면 유저 프로필 정보를 삭제할 수 없습니다"
+          "snsId 값이 없으면 유저 프로필 정보를 삭제할 수 없습니다",
         );
       }
     } catch (error) {
@@ -76,8 +76,8 @@ class userRepositories {
 
   getUserInfo = async (snsId) => {
     const userInfo = await User.findOne({ snsId: snsId });
-     return userInfo;
-  }
+    return userInfo;
+  };
 
   isSameUserId_DB = async (snsId) => {
     try {

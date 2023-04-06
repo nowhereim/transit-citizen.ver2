@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       nickname: DataTypes.STRING,
       agreepi: DataTypes.BOOLEAN,
-      account_type: DataTypes.INTEGER,
+      account_type: DataTypes.STRING,
       gender: DataTypes.STRING,
       introduction: DataTypes.STRING,
       createdAt: {
@@ -40,6 +40,6 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     },
   );
-  // User.sequelize.sync({ force: true });
+  // User.sequelize.sync({ alter: true });
   return User;
 };

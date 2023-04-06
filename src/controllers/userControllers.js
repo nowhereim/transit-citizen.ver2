@@ -70,7 +70,6 @@ class userControllers {
   uploadImage = async (req, res) => {
     try {
       const { id } = req.params;
-      const editimage = req.body;
       const primaryImage =
         req.files && req.files.primaryImage ? req.files.primaryImage[0] : null;
       const otherImages =
@@ -80,7 +79,6 @@ class userControllers {
         id,
         primaryImage,
         otherImages,
-        editimage,
       );
       if (uploadImage.error) return res.status(400).send({ uploadImage });
 
@@ -97,6 +95,30 @@ class userControllers {
       const editUserInfo = await this.userServices.editUserInfo(id, userval);
       if (editUserInfo.error) return res.status(400).send({ editUserInfo });
       res.status(200).send({ msg: editUserInfo });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  };
+
+  deleteImages = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const images = req.body;
+      const deleteImages = await this.userServices.deleteImages(id, images);
+      if (deleteImages.error) return res.status(400).send({ deleteImages });
+      res.status(200).send({ msg: deleteImages });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  };
+
+  patchImages = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const images = req.body;
+      const patchImages = await this.userServices.patchImages(id, images);
+      if (patchImages.error) return res.status(400).send({ patchImages });
+      res.status(200).send({ msg: patchImages });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
