@@ -1,5 +1,5 @@
 const UserServices = require("../services/userServices");
-const uploadImagesToS3 = require("../../utils/s3Upload");
+const logger = require("../../utils/logger");
 class userControllers {
   constructor() {
     this.userServices = new UserServices();
@@ -19,7 +19,8 @@ class userControllers {
       await this.userServices.createLocalUserInfo(rest);
       return res.status(200).send({ msg: "성공" });
     } catch (error) {
-      next(error);
+      logger.error(error);
+      res.status(400).json({ message: error.message });
     }
   };
 
@@ -34,7 +35,8 @@ class userControllers {
         return res.status(400).send({ error: "중복된 아이디입니다." });
       return res.status(200).send({ msg: "사용 가능한 아이디 입니다." });
     } catch (error) {
-      next(error);
+      logger.error(error);
+      res.status(400).json({ message: error.message });
     }
   };
   //로그인
@@ -49,6 +51,7 @@ class userControllers {
 
       res.status(200).send({ data: userData });
     } catch (error) {
+      logger.error(error);
       res.status(400).json({ message: error.message });
     }
   };
@@ -63,6 +66,7 @@ class userControllers {
         return res.status(400).send({ error: "존재하지 않는 유저입니다." });
       res.status(200).send({ userInfo: userInfo });
     } catch (error) {
+      logger.error(error);
       res.status(400).json({ message: error.message });
     }
   };
@@ -84,6 +88,7 @@ class userControllers {
 
       res.status(200).send({ msg: uploadImage });
     } catch (error) {
+      logger.error(error);
       res.status(400).json({ message: error.message });
     }
   };
@@ -96,6 +101,7 @@ class userControllers {
       if (editUserInfo.error) return res.status(400).send({ editUserInfo });
       res.status(200).send({ msg: editUserInfo });
     } catch (error) {
+      logger.error(error);
       res.status(400).json({ message: error.message });
     }
   };
@@ -108,6 +114,7 @@ class userControllers {
       if (deleteImages.error) return res.status(400).send({ deleteImages });
       res.status(200).send({ msg: deleteImages });
     } catch (error) {
+      logger.error(error);
       res.status(400).json({ message: error.message });
     }
   };
@@ -120,6 +127,7 @@ class userControllers {
       if (patchImages.error) return res.status(400).send({ patchImages });
       res.status(200).send({ msg: patchImages });
     } catch (error) {
+      logger.error(error);
       res.status(400).json({ message: error.message });
     }
   };
