@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const redis = require("../../utils/redis");
+const logger = require("../../utils/logger");
 const verify = (token) => {
   try {
     jwt.verify(token, process.env.JWT_SECRET);
@@ -47,8 +48,8 @@ class NewtokenServices {
         }
       }
     } catch (error) {
-      console.log(error.name);
-      console.log(error.message);
+      logger.error(error.name);
+      logger.error(error.message);
     }
   };
 }

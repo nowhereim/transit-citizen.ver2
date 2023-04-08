@@ -3,11 +3,13 @@ const { User, Image, sequelize } = require("../models");
 const bcrypt = require("bcrypt");
 const redis = require("../../utils/redis");
 const uploadImagesToS3 = require("../../utils/s3Upload");
+const logger = require("../../utils/logger");
 //트랜잭션
 
 class UploadError extends Error {
+  //에러를 상속받아서 에러를 만들어줌
   constructor(message) {
-    super(message);
+    super(message); //super는 부모클래스의 생성자를 호출하는 것
     this.name = "UploadError";
   }
 }
@@ -19,11 +21,10 @@ class userServices {
       const { password, ...rest } = loginval;
       const bcryptpassword = await bcrypt.hash(loginval.password, 5);
       const result = await User.create({ ...rest, password: bcryptpassword });
-      console.log(result);
+      logger.info(result);
       return result;
     } catch (error) {
-      console.log(error.name);
-      console.log(error.message);
+      logger.error(error);
     }
   };
 
@@ -34,9 +35,7 @@ class userServices {
         attributes: ["user_id", "account", "nickname", "password"],
       });
       const { password, ...rest } = finduser.dataValues;
-      console.log(rest);
       const verifypw = await bcrypt.compare(loginval.password, password);
-      console.log(verifypw);
       if (verifypw) {
         const token = jwt.sign(
           { account: rest.account },
@@ -60,8 +59,7 @@ class userServices {
         return false;
       }
     } catch (error) {
-      console.log(error.name);
-      console.log(error.message);
+      logger.error(error);
       return false;
     }
   };
@@ -72,6 +70,7 @@ class userServices {
       if (result !== null) return false; // 유저 아이디 중복 O
       return true;
     } catch (error) {
+      logger.error(error);
       throw error;
     }
   };
@@ -95,35 +94,28 @@ class userServices {
       });
       return { result, images };
     } catch (error) {
+      logger.error(error);
       throw error;
     }
   };
 
   uploadImage = async (id, primaryImage, otherImages) => {
     let result = [];
-    console.log(primaryImage);
     const pc = primaryImage ? 1 : 0;
     const oc = otherImages ? otherImages.length : 0;
     const count = pc + oc;
     try {
-      console.time("uploadImaget");
       await sequelize.transaction(async (t) => {
-        console.time("primarysearch");
         const primary = await Image.findAll({
           where: { user_id: id },
         });
-        console.log(primary);
         if (primary.length + count > 5) {
           throw new UploadError("이미지는 최대 5개까지 등록 가능합니다.");
         }
         if (primaryImage) {
-          // console.log(primaryImage);
           const pi = (await uploadImagesToS3(primaryImage, otherImages)).filter(
             (image) => image.is_primary,
           );
-          console.log("============pi============");
-          console.log(pi);
-          console.log("============pi============");
           const Presult = await Image.create(
             {
               user_id: id,
@@ -135,40 +127,26 @@ class userServices {
           result.push(Presult);
           if (primary.length !== 0) {
             const primaryImages = primary.find((image) => image.is_primary);
-            console.log("============primaryImages============");
-            console.log(primaryImages);
-            console.log("============primaryImages============");
             const updatePrimary = await Image.update(
               { is_primary: false },
               { where: { image_id: primaryImages.id, is_primary: true } },
               { transaction: t },
             );
-            console.log("============updatePrimary============");
-            console.log(updatePrimary);
-            console.log("============updatePrimary============");
-            console.timeEnd("primarysearch");
-            console.time("pi");
           }
         }
         if (otherImages) {
           const otherImagesCount = primary.filter(
             (image) => !image.is_primary,
           ).length;
-          // console.log(otherImages.length, otherImagesCount);
+
           if (otherImages.length + otherImagesCount >= 5) {
             throw new UploadError(
               " 서브 이미지는 최대 4개까지 등록 가능합니다.",
             );
           }
-          console.timeEnd("pi");
-          console.time("oi");
-          // console.log(otherImages);
           const oi = (await uploadImagesToS3(primaryImage, otherImages)).filter(
             (image) => !image.is_primary,
           );
-          console.log("============oi============");
-          console.log(oi);
-          console.log("============oi============");
           for (let i = 0; i < otherImages.length; i++) {
             const Oresult = await Image.create(
               {
@@ -182,11 +160,9 @@ class userServices {
           }
         }
       });
-      console.timeEnd("oi");
-      console.timeEnd("uploadImaget");
       return result;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return { error: error.message };
     }
   };
@@ -201,13 +177,13 @@ class userServices {
       }
       return result;
     } catch (error) {
+      logger.error(error);
       throw error;
     }
   };
 
   deleteImages = async (id, images) => {
     try {
-      console.log(id, images);
       const result = [];
       for (let i = 0; i < images.length; i++) {
         const dtresult = await Image.destroy({
@@ -223,17 +199,20 @@ class userServices {
 
   patchImages = async (id, images) => {
     try {
-      const result = [];
-      console.log(images);
+      const count = [];
       for (let i = 0; i < images.length; i++) {
-        const dtresult = await Image.update(
+        const test = await Image.update(
           { is_primary: images[i].is_primary },
-          { where: { user_id: id, image_url: images[i].url } },
+          { where: { user_id: id, image_url: images[i].image_url } },
         );
-        result.push(dtresult);
+        count.push(test);
       }
-      return result;
+      if (count.length !== images.length) {
+        throw new Error("이미지 수정 실패");
+      }
+      return "대표이미지 변경 성공";
     } catch (error) {
+      logger.error(error);
       throw error;
     }
   };

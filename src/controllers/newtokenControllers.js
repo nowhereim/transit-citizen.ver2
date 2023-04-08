@@ -1,9 +1,5 @@
 const logger = require("../../utils/logger");
-const redis = require("../../utils/redis");
-const jwt = require("jsonwebtoken");
 const NewtokenServices = require("../services/newtokenServices");
-// const { promisify } = require("util");
-// const getAsync = promisify(redis.get).bind(redis);
 
 class AssetControllers {
   constructor() {
