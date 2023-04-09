@@ -1,9 +1,9 @@
-const server = require("./app");
+const server = require("../../app");
 const crypto = require("crypto");
-const connect = require("./src/schemas");
+const connect = require("../schemas");
 connect();
 require("dotenv").config();
-const Maching = require("./src/schemas/maching");
+const Maching = require("../schemas/maching");
 
 const io = require("socket.io")(server, {
   cors: {

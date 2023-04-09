@@ -5,7 +5,6 @@ const app = express();
 const cors = require("cors");
 const server = require("http").createServer(app);
 const connect = require("./src/schemas");
-const cloudinaryConfig = require("./config/cloudconfig");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
@@ -31,7 +30,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
-app.use(cloudinaryConfig);
 app.get("/", (req, res) => {
   res.render("socket");
 });

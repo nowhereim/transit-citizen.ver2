@@ -1,7 +1,7 @@
 node_modules
 .env
 backup.js
-views
+views/*
 randomChat
 testCode
 package-lock.json
@@ -13,7 +13,7 @@ dbpassFunction.*
 routes
 sound
 labels.*
-utils
-logs
+utils/*
+logs/*
 config.json
 socialControllers.js
