@@ -131,6 +131,24 @@ class userControllers {
       res.status(400).json({ message: error.message });
     }
   };
+
+  uploadchatImage = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const chatImage = req.file;
+      console.log(chatImage);
+      const uploadchatImage = await this.userServices.uploadchatImage(
+        id,
+        chatImage,
+      );
+      if (uploadchatImage.error)
+        return res.status(400).send({ uploadchatImage });
+      res.status(200).send({ url: uploadchatImage, id });
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ message: error.message });
+    }
+  };
 }
 
 module.exports = userControllers;

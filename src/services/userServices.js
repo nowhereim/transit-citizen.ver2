@@ -3,6 +3,7 @@ const { User, Image, sequelize } = require("../models");
 const bcrypt = require("bcrypt");
 const redis = require("../../utils/redis");
 const uploadImagesToS3 = require("../../utils/s3Upload");
+const uploadOneS3 = require("../../utils/s3single");
 const logger = require("../../utils/logger");
 //트랜잭션
 
@@ -211,6 +212,17 @@ class userServices {
         throw new Error("이미지 수정 실패");
       }
       return "대표이미지 변경 성공";
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+  };
+
+  uploadchatImage = async (id, image) => {
+    try {
+      const result = await uploadOneS3(image);
+      console.log(result);
+      return result;
     } catch (error) {
       logger.error(error);
       throw error;
