@@ -73,7 +73,7 @@ class SocialServices {
     }
   };
 
-  naverCallback = async (authorizationCode) => {
+  naverCallback = async (authorizationCode, state) => {
     console.log(authorizationCode);
     try {
       const { accessToken, refreshToken } = await getTokensFromNaverAPI(
@@ -137,10 +137,9 @@ class SocialServices {
         console.log("Error:", tokens.error);
         return;
       }
+      const { accessToken } = tokens;
 
-      const { access_token } = tokens;
-
-      const profile = await getProfileFromGoogleAPI(access_token);
+      const profile = await getProfileFromGoogleAPI(accessToken);
       const user = await User.findOrCreate({
         where: { account: profile.id },
         defaults: {

@@ -7,8 +7,11 @@ class SocialController {
   }
 
   naverCallback = async (req, res, next) => {
-    const { authorizationCode } = req.body;
-    const result = await this.socialServices.naverCallback(authorizationCode);
+    const { authorizationCode, state } = req.body;
+    const result = await this.socialServices.naverCallback(
+      authorizationCode,
+      state,
+    );
 
     if (result.err) {
       res.status(400).send(result);
