@@ -17,20 +17,14 @@ class NewtokenServices {
       const decoded = jwt.decode(token);
       const resultacc = await redis.get(`${decoded.account}acc`);
       if (resultacc !== token)
-        return {
-          errorMessage: "The last issued token does not match.",
-        };
+        throw new Error("잘못된 토큰입니다. 다시 로그인해주세요.");
       const result = await redis.get(`${decoded.account}ref`);
       if (!result) {
-        return {
-          errorMessage: "The refresh token has expired. Please login again.",
-        };
+        throw new Error("잘못된 토큰입니다. 다시 로그인해주세요.");
       } else {
         const refreshVerify = verify(result);
         if (refreshVerify === false) {
-          return {
-            errorMessage: "The refresh token has expired. Please login again.",
-          };
+          throw new Error("잘못된 토큰입니다. 다시 로그인해주세요.");
         } else {
           const decoded = jwt.decode(result);
           const token = jwt.sign(
@@ -43,13 +37,13 @@ class NewtokenServices {
             },
           );
           redis.set(`${decoded.account}acc`, token);
-          console.log(token);
           return token;
         }
       }
     } catch (error) {
       logger.error(error.name);
       logger.error(error.message);
+      return { error: error.message };
     }
   };
 }

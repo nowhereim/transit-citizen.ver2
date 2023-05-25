@@ -131,7 +131,7 @@ class userControllers {
       res.status(400).json({ message: error.message });
     }
   };
-
+  //FIXME: 삭제 예정
   uploadchatImage = async (req, res) => {
     try {
       const { id } = req.params;
@@ -148,6 +148,43 @@ class userControllers {
       logger.error(error);
       res.status(400).json({ message: error.message });
     }
+  };
+
+  sendEmail = async (req, res) => {
+    try {
+      const { email } = req.body;
+      const sendEmail = await this.userServices.sendEmail(email);
+      if (sendEmail.error) return res.status(400).send({ sendEmail });
+      res.status(200).send({ msg: sendEmail });
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ message: error.message });
+    }
+  };
+
+  authCode = async (req, res) => {
+    try {
+      const { email, authcode } = req.body;
+      const authCodeCheck = await this.userServices.authCode(email, authcode);
+      if (authCodeCheck.error) return res.status(400).send(authCodeCheck.error);
+      res.status(200).send({ msg: authCodeCheck });
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ message: error.message });
+    }
+  };
+
+  reputation = async (req, res) => {
+    const { id } = req.params;
+    const { reputation } = req.body;
+    if (typeof reputation !== "boolean")
+      return res
+        .status(400)
+        .send({ error: "reputation은 boolean 타입입니다." });
+    const reputationCheck = await this.userServices.reputation(id, reputation);
+    if (reputationCheck.error)
+      return res.status(400).send(reputationCheck.error);
+    res.status(200).send({ result: "성공" });
   };
 }
 
