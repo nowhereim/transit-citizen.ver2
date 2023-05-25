@@ -9,6 +9,36 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+      User.belongsTo(models.Age_group, {
+        foreignKey: "age_group",
+        targetKey: "id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      User.hasMany(models.Block_user, {
+        foreignKey: "request_user",
+        sourceKey: "id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      User.hasMany(models.Block_user, {
+        foreignKey: "block_user",
+        sourceKey: "id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      User.hasMany(models.Matchedlist, {
+        foreignKey: "user_id",
+        sourceKey: "id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      User.hasMany(models.Matchedlist, {
+        foreignKey: "matched_user",
+        sourceKey: "id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
   User.init(
@@ -19,7 +49,6 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         field: "user_id",
       },
-      // email: DataTypes.STRING,
       account: DataTypes.STRING,
       password: DataTypes.STRING,
       nickname: DataTypes.STRING,
@@ -27,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
       account_type: DataTypes.STRING,
       gender: DataTypes.STRING,
       introduction: DataTypes.STRING,
+      age_group: DataTypes.INTEGER,
       createdAt: {
         type: DataTypes.DATE,
       },

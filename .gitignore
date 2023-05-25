@@ -16,3 +16,14 @@ labels.*
 utils/*
 logs/*
 config.json
+dijkstra.js
+pridikstra.js
+models
+services
+controllers
+station
+config
+socket
+app.js
+controllers
+services

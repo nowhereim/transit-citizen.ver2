@@ -6,8 +6,15 @@ const server = require("http").createServer(app);
 const connect = require("./src/schemas");
 const helmet = require("helmet");
 const morgan = require("morgan");
-const { User } = require("./src/models");
-
+const updateStations = require("./station/station.js");
+const schedule = require("node-schedule");
+const port = process.env.PORT || 3000;
+const initializeSocket = require("./src/socket/socket");
+initializeSocket(server);
+const weeklyJob = schedule.scheduleJob("0 0 * * 0", () => {
+  logger.info("Updating stations...");
+  updateStations();
+});
 app.use(morgan("combined"));
 app.use(helmet.frameguard());
 app.use(helmet.hsts());
@@ -31,13 +38,6 @@ app.use("/", routes);
 app.use((error, req, res, next) => {
   res.status(500).json({ message: error.message });
 });
-
-// server.js 파일삭제 후 이동
-const port = process.env.PORT || 3000;
-
-// chatControllers.js에서 초기화 함수를 가져온다
-const initializeSocket = require("./src/controllers/chatControllers");
-initializeSocket(server);
 
 server.listen(port, () => {
   console.log(`Server listening on port ${port}`);
