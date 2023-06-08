@@ -31,6 +31,21 @@ class userServices {
       return result;
     } catch (error) {
       logger.error(error);
+      return { error: error.message };
+    }
+  };
+
+  checkIsSameUserNickname = async (nickname) => {
+    try {
+      const result = await User.findOne({ where: { nickname } });
+      if (result) {
+        throw new Error("중복된 닉네임 입니다.");
+      } else {
+        return true;
+      }
+    } catch (error) {
+      logger.error(error);
+      return { error: error.message };
     }
   };
 
@@ -74,11 +89,11 @@ class userServices {
   checkIsSameUserId = async (account) => {
     try {
       const result = await User.findOne({ where: { account } });
-      if (result !== null) return false; // 유저 아이디 중복 O
+      if (result !== null) throw new Error("중복된 아이디 입니다.");
       return true;
     } catch (error) {
       logger.error(error);
-      throw error;
+      throw { error: error.message };
     }
   };
 
@@ -93,6 +108,7 @@ class userServices {
           "introduction",
           "nickname",
           "gender",
+          "account_type",
         ],
       });
       const images = await Image.findAll({
@@ -190,51 +206,49 @@ class userServices {
     }
   };
 
-  deleteImages = async (id, images) => {
+  deleteImages = async (id, url) => {
     try {
-      const result = [];
-      for (let i = 0; i < images.length; i++) {
-        const dtresult = await Image.destroy({
-          where: { user_id: id, image_url: images[i].url },
-        });
-        result.push(dtresult);
+      const result = await Image.destroy({
+        where: { user_id: id, image_url: url },
+      });
+      if (!result) {
+        throw new Error("삭제할 데이터가 없습니다.");
       }
+
       return result;
     } catch (error) {
-      throw error;
+      logger.error(error);
+      return { error: error.message };
     }
   };
 
   patchImages = async (id, images) => {
     try {
-      const count = [];
-      for (let i = 0; i < images.length; i++) {
-        const test = await Image.update(
-          { is_primary: images[i].is_primary },
-          { where: { user_id: id, image_url: images[i].image_url } },
+      const transaction = await sequelize.transaction();
+      for (const val of images) {
+        const result = await Image.update(
+          { is_primary: val.is_primary },
+          { where: { user_id: id, image_url: val.image_url } },
+          { transaction },
         );
-        count.push(test);
+        if (!result) {
+          throw new Error("이미지 수정 실패");
+        }
       }
-      if (count.length !== images.length) {
+      const primary = await Image.findAll({
+        where: { user_id: id, is_primary: true },
+      });
+
+      if (primary.length >= 2) {
         throw new Error("이미지 수정 실패");
       }
+      await transaction.commit();
       return "대표이미지 변경 성공";
     } catch (error) {
       logger.error(error);
-      throw error;
+      throw { error: error.message };
     }
   };
-  //FIXME: 삭제 예정
-  // uploadchatImage = async (id, image) => {
-  //   try {
-  //     const result = await uploadOneS3(image);
-  //     console.log(result);
-  //     return result;
-  //   } catch (error) {
-  //     logger.error(error);
-  //     throw error;
-  //   }
-  // };
 
   sendEmail = async (email) => {
     logger.info(email + "에게 메일을 보냈습니다.");
@@ -298,7 +312,84 @@ class userServices {
       return result;
     } catch (error) {
       logger.error(error);
-      throw error;
+      return { error: error.message };
+    }
+  };
+
+  resetPassword = async (email) => {
+    try {
+      const exist = await User.findOne({ where: { account: email } });
+      if (!exist) {
+        throw new Error("존재하지 않는 이메일 입니다.");
+      }
+      const randomNum = () => {
+        let num = "";
+        let string = "abcdefghijklmnopqrstuvwxyz";
+        for (let i = 0; i < 5; i++) {
+          num += Math.floor(Math.random() * 10);
+        }
+        for (let i = 0; i < 5; i++) {
+          num += string.charAt(Math.floor(Math.random() * string.length));
+        }
+        return num;
+      };
+
+      const authNum = randomNum();
+      const bcryptpassword = await bcrypt.hash(authNum, 5);
+      const result = await User.update(
+        { password: bcryptpassword },
+        { where: { account: email } },
+      );
+      if (!result) {
+        throw new Error("비밀번호 변경 실패");
+      }
+      let emailParam = {
+        toEmail: email,
+
+        subject: "환승시민 비밀번호 초기화 입니다.",
+        html: ` <h3>안녕하세요.환승시민 입니다.</h3>
+       <h3>비밀번호가 아래와 같이 초기화되었습니다.</h3>
+       <h1> 초기화된 비밀번호 : ${authNum} </h1>
+       <h3>초기화된 비밀번호로 로그인해주세요.</h3>
+       <h3>감사합니다.</h3>
+      `,
+        text:
+          "초기화된 비밀번호는 " +
+          authNum +
+          "입니다." +
+          "해당 인증 번호는 3분후 만료되므로 3분안에 인증을 완료해주세요",
+      };
+      mailSender.sendMail(emailParam);
+      return true;
+    } catch (error) {
+      logger.error(error);
+      return { error: error.message };
+    }
+  };
+
+  changePassword = async (id, password, newpassword) => {
+    try {
+      const checkuser = await User.findOne({ where: { user_id: id } });
+      if (!checkuser) {
+        throw new Error("존재하지 않는 유저입니다.");
+      }
+      const validPassword = await bcrypt.compare(password, checkuser.password);
+      if (!validPassword) {
+        throw new Error("비밀번호가 일치하지 않습니다.");
+      }
+      const bcryptpassword = await bcrypt.hash(newpassword, 5);
+      console.log(bcryptpassword);
+      const result = await User.update(
+        { password: bcryptpassword },
+        { where: { user_id: id } },
+      );
+      if (!result) {
+        throw new Error("비밀번호 변경 실패");
+      }
+      return true;
+    } catch (error) {
+      logger.error(error);
+      return { error: error.message };
     }
   };
 }

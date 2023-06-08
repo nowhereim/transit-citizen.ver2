@@ -15,6 +15,10 @@ const weeklyJob = schedule.scheduleJob("0 0 * * 0", () => {
   logger.info("Updating stations...");
   updateStations();
 });
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger_output.json");
+
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // docs 대신 swagger로 수정한다.
 app.use(morgan("combined"));
 app.use(helmet.frameguard());
 app.use(helmet.hsts());
