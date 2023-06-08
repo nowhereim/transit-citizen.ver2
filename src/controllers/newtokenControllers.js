@@ -1,9 +1,5 @@
 const logger = require("../../utils/logger");
-const redis = require("../../utils/redis");
-const jwt = require("jsonwebtoken");
 const NewtokenServices = require("../services/newtokenServices");
-// const { promisify } = require("util");
-// const getAsync = promisify(redis.get).bind(redis);
 
 class AssetControllers {
   constructor() {
@@ -15,10 +11,8 @@ class AssetControllers {
       //TODO: 요구사항이 바뀌는중 .. 수정 대기중
       const { token } = req.body;
       const result = await this.newtokenServices.getNewtoken(token);
-      if (result.errorMessage) {
-        return res.status(401).send({
-          message: result,
-        });
+      if (result.message) {
+        return res.status(401).send(result);
       }
       res.status(200).send({
         acctoken: result,
