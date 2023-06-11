@@ -1,5 +1,11 @@
 const jwt = require("jsonwebtoken");
-const { User, Image, sequelize, Matchedlist } = require("../models");
+const {
+  User,
+  Image,
+  sequelize,
+  Matchedlist,
+  Userdeactivations,
+} = require("../models");
 const bcrypt = require("bcrypt");
 const redis = require("../../utils/redis");
 const uploadImagesToS3 = require("../../utils/s3Upload");
@@ -385,6 +391,57 @@ class userServices {
       );
       if (!result) {
         throw new Error("비밀번호 변경 실패");
+      }
+      return true;
+    } catch (error) {
+      logger.error(error);
+      return { error: error.message };
+    }
+  };
+
+  deleteUser = async (id, val) => {
+    try {
+      const checkuser = await User.findOne({ where: { user_id: id } });
+      if (!checkuser) {
+        throw new Error("존재하지 않는 유저입니다.");
+      }
+      if (checkuser.account_type !== "local") {
+        const result = await User.destroy({ where: { user_id: id } });
+        if (!result) {
+          throw new Error("유저 삭제 실패");
+        }
+      } else {
+        const validPassword = await bcrypt.compare(
+          val.password,
+          checkuser.password,
+        );
+        if (!validPassword) {
+          throw new Error("비밀번호가 일치하지 않습니다.");
+        }
+        const result = await User.destroy({ where: { user_id: id } });
+        if (!result) {
+          throw new Error("유저 삭제 실패");
+        }
+      }
+
+      await Userdeactivations.create({
+        nickname: checkuser.nickname,
+        reason: val.reason,
+      });
+      return true;
+    } catch (error) {
+      logger.error(error);
+      return { error: error.message };
+    }
+  };
+
+  logout = async (account) => {
+    try {
+      const acc = await redis.del(`${account}acc`);
+      const ref = await redis.del(`${account}ref`);
+
+      if (acc === 0 || ref === 0) {
+        throw new Error("로그아웃 실패");
       }
       return true;
     } catch (error) {

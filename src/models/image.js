@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       Image.belongsTo(models.User, {
         foreignKey: "user_id",
         targetKey: "id",
-        onDelete: "no action",
-        onUpdate: "no action",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
     }
   }
@@ -41,5 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       timezone: "+09:00",
     },
   );
+  // Image.sequelize.sync({ alter: true });
   return Image;
 };

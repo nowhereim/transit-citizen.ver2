@@ -25,11 +25,11 @@ module.exports = async (req, res, next) => {
       }
     };
     const veresult = verify(tokenValue);
-    if (veresult === false) {
+    if (!veresult) {
       return res.status(401).send({
         errorMessage: "The access token has expired.",
       });
-    } else if (veresult === true) {
+    } else if (veresult) {
       const decoded = jwt.decode(tokenValue);
       res.locals.account = decoded.account;
       next();

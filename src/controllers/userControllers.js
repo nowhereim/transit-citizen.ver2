@@ -252,6 +252,35 @@ class userControllers {
       res.status(400).json({ error: error.message });
     }
   };
+
+  deleteUser = async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      const { id } = req.params;
+      const val = req.body;
+      const deleteUser = await this.userServices.deleteUser(id, val);
+      if (deleteUser.error) return res.status(400).send(deleteUser);
+      res.status(200).send({ result: "성공" });
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ error: error.message });
+    }
+  };
+
+  logout = async (req, res) => {
+    try {
+      const { account } = req.body;
+      const logout = await this.userServices.logout(account);
+      if (logout.error) return res.status(400).send(logout);
+      res.status(200).send({ result: "성공" });
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ error: error.message });
+    }
+  };
 }
 
 module.exports = userControllers;
