@@ -124,6 +124,10 @@ class userControllers {
 
   editUserInfo = async (req, res) => {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
       const { id } = req.params;
       const userval = req.body;
       const editUserInfo = await this.userServices.editUserInfo(id, userval);
