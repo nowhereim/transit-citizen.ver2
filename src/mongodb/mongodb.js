@@ -1,5 +1,6 @@
 const MongoClient = require("mongodb").MongoClient;
-const uri = "mongodb+srv://Occu:rich1104@occuchats.fijpjue.mongodb.net/test";
+require("dotenv").config();
+const uri = process.env.MONGODB_URI;
 const db = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
