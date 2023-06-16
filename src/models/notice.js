@@ -13,7 +13,11 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         field: "Notice_id",
       },
-      name: {
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      tag: {
         type: DataTypes.STRING,
         allowNull: false,
       },

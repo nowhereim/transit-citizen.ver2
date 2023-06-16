@@ -1,6 +1,5 @@
 const UserServices = require("../services/userServices");
 const logger = require("../../utils/logger");
-const { validationResult } = require("express-validator");
 class userControllers {
   constructor() {
     this.userServices = new UserServices();
@@ -8,10 +7,6 @@ class userControllers {
   // 로컬 회원가입
   localSignUpInfo = async (req, res, next) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const { password2, ...rest } = req.body;
       const userIdCheck = await this.userServices.checkIsSameUserId(
         rest.account,
@@ -30,10 +25,6 @@ class userControllers {
   // 아이디 중복 확인
   userIdCheck = async (req, res, next) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const { account } = req.body;
       const userIdCheck = await this.userServices.checkIsSameUserId(account);
       if (userIdCheck === false)
@@ -48,10 +39,6 @@ class userControllers {
   // nickname 중복 확인
   userNicknameCheck = async (req, res, next) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const { nickname } = req.body;
       const userNicknameCheck = await this.userServices.checkIsSameUserNickname(
         nickname,
@@ -68,10 +55,6 @@ class userControllers {
   //로그인
   login = async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const loginval = req.body;
       const userData = await this.userServices.login(loginval);
       if (userData === false)
@@ -124,10 +107,6 @@ class userControllers {
 
   editUserInfo = async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const { id } = req.params;
       const userval = req.body;
       const editUserInfo = await this.userServices.editUserInfo(id, userval);
@@ -210,10 +189,6 @@ class userControllers {
   reputation = async (req, res) => {
     const { id } = req.params;
     const { reputation } = req.body;
-    if (typeof reputation !== "boolean")
-      return res
-        .status(400)
-        .send({ error: "reputation은 boolean 타입입니다." });
     const reputationCheck = await this.userServices.reputation(id, reputation);
     if (reputationCheck.error)
       return res.status(400).send(reputationCheck.error);
@@ -222,10 +197,6 @@ class userControllers {
 
   resetPassword = async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const { email } = req.body;
       const resetPassword = await this.userServices.resetPassword(email);
       if (resetPassword.error) return res.status(400).send(resetPassword);
@@ -238,10 +209,6 @@ class userControllers {
 
   changePassword = async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const { id } = req.params;
       const { password, newpassword } = req.body;
       const changePassword = await this.userServices.changePassword(
@@ -259,10 +226,6 @@ class userControllers {
 
   deleteUser = async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const { id } = req.params;
       const val = req.body;
       const deleteUser = await this.userServices.deleteUser(id, val);
@@ -279,6 +242,19 @@ class userControllers {
       const { account } = req.body;
       const logout = await this.userServices.logout(account);
       if (logout.error) return res.status(400).send(logout);
+      res.status(200).send({ result: "성공" });
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ error: error.message });
+    }
+  };
+
+  blockUser = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { block_user } = req.body;
+      const blockUser = await this.userServices.blockUser(id, block_user);
+      if (blockUser.error) return res.status(400).send(blockUser);
       res.status(200).send({ result: "성공" });
     } catch (error) {
       logger.error(error);

@@ -3,7 +3,20 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Report extends Model {
-    static associate(models) {}
+    static associate(models) {
+      Report.belongsTo(models.User, {
+        foreignKey: "reporter",
+        targetKey: "id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      Report.belongsTo(models.User, {
+        foreignKey: "reported",
+        targetKey: "id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+    }
   }
   Report.init(
     {
@@ -13,7 +26,15 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         field: "Report_id",
       },
-      name: {
+      reporter: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      reported: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      title: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -23,7 +44,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       images: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
     },
     {
@@ -34,6 +54,6 @@ module.exports = (sequelize, DataTypes) => {
       timezone: "+09:00",
     },
   );
-  //   Report.sequelize.sync({ alter: true });
+  // Report.sequelize.sync({ alter: true });
   return Report;
 };

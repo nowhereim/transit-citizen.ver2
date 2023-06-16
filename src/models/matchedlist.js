@@ -34,6 +34,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      roomkey: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      //닉네임으로 구별해야할듯.
+      chatrequest: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       reputation: {
         type: DataTypes.BOOLEAN,
         allowNull: true,

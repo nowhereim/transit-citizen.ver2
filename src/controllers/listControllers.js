@@ -42,6 +42,18 @@ class ListController {
       res.status(400).json({ message: error.message });
     }
   };
+
+  showChat = async (req, res, next) => {
+    try {
+      const { key } = req.params;
+      const result = await this.listServices.showChat(key);
+      if (result.error) res.status(400).send(result);
+      res.status(200).send(result);
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ message: error.message });
+    }
+  };
 }
 
 module.exports = ListController;
