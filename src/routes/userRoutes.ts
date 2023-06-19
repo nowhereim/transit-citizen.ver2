@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { check } from "express-validator";
 import multer from "multer";
 import UserControllers from "../controllers/userControllers.js";

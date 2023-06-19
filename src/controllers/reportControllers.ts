@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
 import logger from "../utils/logger.js";
 import ReportServices from "../services/reportServices.js";
 import Report from "src/models/report.js";

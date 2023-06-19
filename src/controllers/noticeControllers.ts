@@ -2,10 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import NoticeServices from "../services/noticeServices.js";
 import logger from "../utils/logger.js";
 import { Notice } from "../models/models.js";
-// { error: error.message } 이렇게 생긴 값의 인터페이스를 만드려면 다음과 같이 작성해야 합니다.
-interface errorInterface {
-  error: string;
-}
 
 class NoticeControllers {
   private noticeServices: NoticeServices;

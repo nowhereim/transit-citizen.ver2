@@ -1,7 +1,7 @@
 import SocialServices from "../services/socialServices.js";
 import { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
-import logger from "src/utils/logger.js";
+import logger from "../utils/logger.js";
 dotenv.config();
 
 class SocialController {
