@@ -10,11 +10,9 @@ class imageControllers {
   uploadchatImage = async (req: Request, res: Response) => {
     try {
       const chatImage = req.file;
-      const uploadchatImage: any = await this.imageServices.uploadchatImage(
+      const uploadchatImage: string = await this.imageServices.uploadchatImage(
         chatImage,
       );
-      if (uploadchatImage.error)
-        return res.status(400).send({ uploadchatImage });
       res.status(200).send({ url: uploadchatImage });
     } catch (error: any) {
       logger.error(error);

@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import ListServices from "../services/listServices.js";
 import logger from "../utils/logger.js";
+import { Station } from "../models/models";
+import {
+  Chat,
+  matchedInterface,
+  shortcutIn,
+} from "../interface/listInterface.js";
 
 class ListController {
   private listServices: ListServices;
@@ -12,11 +18,9 @@ class ListController {
   matchedList = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { cursor } = req.params;
-      console.log(cursor);
-      const result = await this.listServices.matchedList(cursor);
-      if (result.error) {
-        return res.status(400).send("커서값이 잘못되었습니다.");
-      }
+      const result: matchedInterface = await this.listServices.matchedList(
+        cursor,
+      );
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
@@ -27,7 +31,7 @@ class ListController {
   stationList = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { value } = req.params;
-      const result = await this.listServices.stationList(value);
+      const result: Station[] = await this.listServices.stationList(value);
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
@@ -38,7 +42,8 @@ class ListController {
   shortcutPath = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { start, end } = req.params;
-      const result = await this.listServices.shortcutPath(start, end);
+      const result: shortcutIn | { 경로: string; distance: number } =
+        await this.listServices.shortcutPath(start, end);
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
@@ -49,8 +54,7 @@ class ListController {
   showChat = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { key } = req.params;
-      const result: any = await this.listServices.showChat(key);
-      if (result.error) res.status(400).send(result);
+      const result: Chat[] = await this.listServices.showChat(key);
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);

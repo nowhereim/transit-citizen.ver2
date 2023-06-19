@@ -1,6 +1,7 @@
 import SocialServices from "../services/socialServices.js";
 import { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
+import logger from "src/utils/logger.js";
 dotenv.config();
 
 class SocialController {
@@ -10,33 +11,38 @@ class SocialController {
   }
 
   naverCallback = async (req: Request, res: Response, next: NextFunction) => {
-    const { authorizationCode, state } = req.body;
-    const result = await this.socialServices.naverCallback(
-      authorizationCode,
-      state,
-    );
-
-    if (result.err) {
-      res.status(400).send(result);
+    try {
+      const { authorizationCode, state } = req.body;
+      const result: { token: string; result: object } =
+        await this.socialServices.naverCallback(authorizationCode, state);
+      res.status(201).send(result);
+    } catch (err: any) {
+      logger.error(err);
+      return res.status(400).send({ message: err.message });
     }
-    res.status(201).send(result);
   };
   kakaoCallback = async (req: Request, res: Response, next: NextFunction) => {
-    const { authorizationCode } = req.body;
-    const result = await this.socialServices.kakaoCallback(authorizationCode);
-    if (result.err) {
-      res.status(400).send(result);
+    try {
+      const { authorizationCode } = req.body;
+      const result: { token: string; result: object } =
+        await this.socialServices.kakaoCallback(authorizationCode);
+      res.status(201).send(result);
+    } catch (err: any) {
+      logger.error(err);
+      return res.status(400).send({ message: err.message });
     }
-    res.status(201).send(result);
   };
 
   googleCallback = async (req: Request, res: Response, next: NextFunction) => {
-    const { authorizationCode } = req.body;
-    const result = await this.socialServices.googleCallback(authorizationCode);
-    if (result.err) {
-      res.status(400).send(result);
+    try {
+      const { authorizationCode } = req.body;
+      const result: { token: string; result: object } =
+        await this.socialServices.googleCallback(authorizationCode);
+      res.status(201).send(result);
+    } catch (err: any) {
+      logger.error(err);
+      return res.status(400).send({ message: err.message });
     }
-    res.status(201).send(result);
   };
 }
 

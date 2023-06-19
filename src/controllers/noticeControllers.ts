@@ -30,8 +30,7 @@ class NoticeControllers {
   showNotice = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { page } = req.params;
-      const result: any = await this.noticeServices.showNotice(page);
-      if (result.error) return res.status(400).send(result);
+      const result: Notice[] = await this.noticeServices.showNotice(page);
       return res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
@@ -42,8 +41,7 @@ class NoticeControllers {
   showNoticeById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { noticeid } = req.params;
-      const result: any = await this.noticeServices.showNoticeById(noticeid);
-      if (result.error) return res.status(400).send(result);
+      const result: Notice = await this.noticeServices.showNoticeById(noticeid);
       return res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
@@ -55,8 +53,8 @@ class NoticeControllers {
     try {
       const { noticeid } = req.params;
       const val = req.body;
-      const result: any = await this.noticeServices.editNotice(noticeid, val);
-      if (result.error) return res.status(400).send(result);
+      const result: [affectedCount: number] =
+        await this.noticeServices.editNotice(noticeid, val);
       return res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
@@ -67,8 +65,7 @@ class NoticeControllers {
   deleteNotice = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { noticeid } = req.params;
-      const result = await this.noticeServices.deleteNotice(noticeid);
-      if (result.error) return res.status(400).send(result);
+      const result: number = await this.noticeServices.deleteNotice(noticeid);
       return res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
