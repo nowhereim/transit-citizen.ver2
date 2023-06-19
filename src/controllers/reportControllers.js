@@ -1,4 +1,4 @@
-const ReportServices = require("../services/ReportServices");
+const ReportServices = require("../services/reportServices");
 const { validationResult } = require("express-validator");
 class ReportController {
   constructor() {
@@ -6,12 +6,9 @@ class ReportController {
   }
   createReport = async (req, res, next) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ message: errors.array() });
-      }
       const val = req.body;
-      const result = await this.reportServices.createReport(val);
+      const image = req.file;
+      const result = await this.reportServices.createReport(val, image);
       res.status(200).send(result);
     } catch (error) {
       logger.error(error);
