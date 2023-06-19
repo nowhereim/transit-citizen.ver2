@@ -10,7 +10,6 @@ upload.*
 sdFucntion.*
 functionstuff.*
 dbpassFunction.*
-routes
 sound
 labels.*
 utils/*
@@ -30,3 +29,19 @@ README.md
 .clinic
 test.js
 chatgpt.js
+*.js
+dist
+config
+utils
+services
+types
+.env
+nodemon.json
+tsconfig.json
+node_modules
+logs
+swagger_output.json
+package-lock.json
+station
+views
+socket
