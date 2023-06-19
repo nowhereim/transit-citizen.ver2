@@ -150,24 +150,6 @@ class UserController {
     }
   };
 
-  // uploadchatImage = async (req: Request, res: Response) => {
-  //   try {
-  //     const { id } = req.params;
-  //     const chatImage = req.file;
-  //     console.log(chatImage);
-  //     const uploadchatImage = await this.userServices.uploadchatImage(
-  //       id,
-  //       chatImage,
-  //     );
-  //     if (uploadchatImage.error)
-  //       return res.status(400).send({ uploadchatImage });
-  //     res.status(200).send({ url: uploadchatImage, id });
-  //   } catch (error: any) {
-  //     logger.error(error);
-  //     res.status(400).json({ message: error.message });
-  //   }
-  // };
-
   sendEmail = async (req: Request, res: Response) => {
     try {
       const { email } = req.body;

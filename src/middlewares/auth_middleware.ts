@@ -14,8 +14,7 @@ const authMiddleware = async (
     const [tokenType, tokenValue] = authorization.split(" ");
 
     if (tokenType !== "Bearer") {
-      res.status(401).send({ errorMessage: "Please login first." });
-      return;
+      throw new Error("토큰 타입이 잘못되었습니다.");
     }
 
     const verify = (token: string) => {
@@ -30,9 +29,7 @@ const authMiddleware = async (
     };
     const veresult = verify(tokenValue);
     if (!veresult) {
-      return res.status(401).send({
-        errorMessage: "The access token has expired.",
-      });
+      throw new Error("토큰이 유효하지 않습니다.");
     } else if (veresult) {
       const decoded: any = jwt.decode(tokenValue);
       res.locals.account = decoded.account;
@@ -42,7 +39,6 @@ const authMiddleware = async (
     logger.error(e.name);
     logger.error(e.message);
     return res.status(401).send({
-      errorname: e.name,
       message: e.message,
     });
   }

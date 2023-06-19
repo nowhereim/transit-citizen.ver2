@@ -12,10 +12,7 @@ class NewtokenControllers {
   accToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { token } = req.body;
-      const result = await this.newtokenServices.getNewtoken(token);
-      if ((result as { message?: string }).message) {
-        return res.status(401).send(result);
-      }
+      const result: string = await this.newtokenServices.getNewtoken(token);
       res.status(200).send({
         acctoken: result,
       });
@@ -23,7 +20,6 @@ class NewtokenControllers {
       logger.error(error.name);
       logger.error(error.message);
       return res.status(401).send({
-        errorname: error.name,
         message: error.message,
       });
     }
