@@ -1,0 +1,15 @@
+dist
+config
+utils
+services
+types
+.env
+nodemon.json
+tsconfig.json
+node_modules
+logs
+swagger_output.json
+package-lock.json
+station
+views
+socket
