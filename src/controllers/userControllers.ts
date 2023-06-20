@@ -7,6 +7,7 @@ import {
   UserInfo,
   Update,
   logrinInterface,
+  loginValInterface,
 } from "../interface/userInterface.js";
 class UserController {
   private userServices: UserServices;
@@ -60,7 +61,7 @@ class UserController {
 
   login = async (req: Request, res: Response) => {
     try {
-      const loginval = req.body;
+      const loginval: loginValInterface = req.body;
       const userData: logrinInterface = await this.userServices.login(loginval);
       res.status(200).send({ data: userData });
     } catch (error: any) {

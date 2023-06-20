@@ -55,7 +55,6 @@ app.get("/", (req: Request, res: Response) => {
   res.render("socket.ejs");
 });
 app.use("/", routes);
-logger.info("Connecting to database...");
 server.listen(port, async () => {
-  logger.error(`Server is listening on port ${port}`);
+  logger.info(`Server is listening on port ${port}`);
 });

@@ -24,3 +24,7 @@ export interface logrinInterface {
     updatedAt?: Date | undefined;
   };
 }
+export interface loginValInterface {
+  account: string;
+  password: string;
+}
