@@ -28,3 +28,11 @@ export interface loginValInterface {
   account: string;
   password: string;
 }
+
+export interface imageInterface {
+  result: [Image];
+}
+
+export interface resultInterface {
+  result: string;
+}

@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import UserServices from "../services/userServices.js";
 import logger from "../utils/logger.js";
-import { Block_user, User } from "../models/models.js";
+import { Block_user, User, Image } from "../models/models.js";
 import {
   UserResult,
   UserInfo,
   Update,
   logrinInterface,
   loginValInterface,
+  imageInterface,
+  resultInterface,
 } from "../interface/userInterface.js";
 class UserController {
   private userServices: UserServices;
@@ -22,7 +24,7 @@ class UserController {
       const userIdCheck: UserResult = await this.userServices.checkIsSameUserId(
         rest.account,
       );
-      const result: any = await this.userServices.createLocalUserInfo(rest);
+      const result: User = await this.userServices.createLocalUserInfo(rest);
       return res.status(200).send({ msg: "성공" });
     } catch (error: any) {
       logger.error(error);
@@ -94,7 +96,7 @@ class UserController {
         otherImages = req.files.otherImages ? req.files.otherImages : null;
       }
 
-      const uploadImage = await this.userServices.uploadImage(
+      const uploadImage: imageInterface = await this.userServices.uploadImage(
         id,
         primaryImage,
         otherImages,
@@ -111,7 +113,7 @@ class UserController {
     try {
       const { id } = req.params;
       const userval = req.body;
-      const editUserInfo: any = await this.userServices.editUserInfo(
+      const editUserInfo: string = await this.userServices.editUserInfo(
         id,
         userval,
       );
@@ -126,7 +128,10 @@ class UserController {
     try {
       const { id } = req.params;
       const { url } = req.body;
-      const deleteImages: any = await this.userServices.deleteImages(id, url);
+      const deleteImages: number = await this.userServices.deleteImages(
+        id,
+        url,
+      );
       res.status(200).send({ msg: "성공" });
     } catch (error: any) {
       logger.error(error);
@@ -138,7 +143,10 @@ class UserController {
     try {
       const { id } = req.params;
       const images = req.body;
-      const patchImages = await this.userServices.patchImages(id, images);
+      const patchImages: resultInterface = await this.userServices.patchImages(
+        id,
+        images,
+      );
       res.status(200).send({ msg: patchImages });
     } catch (error: any) {
       logger.error(error);
@@ -149,7 +157,9 @@ class UserController {
   sendEmail = async (req: Request, res: Response) => {
     try {
       const { email } = req.body;
-      const sendEmail = await this.userServices.sendEmail(email);
+      const sendEmail: resultInterface = await this.userServices.sendEmail(
+        email,
+      );
 
       res.status(200).send({ msg: sendEmail });
     } catch (error: any) {
@@ -161,7 +171,7 @@ class UserController {
   authCode = async (req: Request, res: Response) => {
     try {
       const { email, authcode } = req.body;
-      const authCodeCheck: object = await this.userServices.authCode(
+      const authCodeCheck: resultInterface = await this.userServices.authCode(
         email,
         authcode,
       );
@@ -190,9 +200,8 @@ class UserController {
   resetPassword = async (req: Request, res: Response) => {
     try {
       const { email } = req.body;
-      const resetPassword: object = await this.userServices.resetPassword(
-        email,
-      );
+      const resetPassword: resultInterface =
+        await this.userServices.resetPassword(email);
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
@@ -204,11 +213,8 @@ class UserController {
     try {
       const { id } = req.params;
       const { password, newpassword } = req.body;
-      const changePassword: object = await this.userServices.changePassword(
-        id,
-        password,
-        newpassword,
-      );
+      const changePassword: resultInterface =
+        await this.userServices.changePassword(id, password, newpassword);
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
@@ -220,7 +226,10 @@ class UserController {
     try {
       const { id } = req.params;
       const val = req.body;
-      const deleteUser: object = await this.userServices.deleteUser(id, val);
+      const deleteUser: resultInterface = await this.userServices.deleteUser(
+        id,
+        val,
+      );
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
@@ -231,7 +240,7 @@ class UserController {
   logout = async (req: Request, res: Response) => {
     try {
       const { account } = req.body;
-      const logout: object = await this.userServices.logout(account);
+      const logout: resultInterface = await this.userServices.logout(account);
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
