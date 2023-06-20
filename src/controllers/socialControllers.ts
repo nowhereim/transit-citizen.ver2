@@ -18,7 +18,7 @@ class SocialController {
       res.status(201).send(result);
     } catch (err: any) {
       logger.error(err);
-      return res.status(400).send({ message: err.message });
+      return res.status(400).send({ err });
     }
   };
   kakaoCallback = async (req: Request, res: Response, next: NextFunction) => {
@@ -29,7 +29,7 @@ class SocialController {
       res.status(201).send(result);
     } catch (err: any) {
       logger.error(err);
-      return res.status(400).send({ message: err.message });
+      return res.status(400).send({ err });
     }
   };
 
@@ -41,7 +41,7 @@ class SocialController {
       res.status(201).send(result);
     } catch (err: any) {
       logger.error(err);
-      return res.status(400).send({ message: err.message });
+      return res.status(400).send({ err });
     }
   };
 }

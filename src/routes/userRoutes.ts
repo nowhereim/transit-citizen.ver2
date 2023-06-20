@@ -112,6 +112,7 @@ router.patch(
       .withMessage("reputation은 boolean값이어야 합니다."),
     check("id", "id값을 확인해주세요.").notEmpty(),
   ],
+  authMiddleware,
   errorCheck,
   userControllers.reputation,
 );
@@ -125,9 +126,14 @@ router.patch(
       .withMessage("비밀번호를 입력해주세요.")
       .isLength({ min: 6 })
       .withMessage("비밀번호는 6자 이상이어야 합니다."),
-    check("password2").custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error("비밀번호가 일치하지 않습니다.");
+    check("newpassword")
+      .notEmpty()
+      .withMessage("변경할 비밀번호를 입력해주세요.")
+      .isLength({ min: 6 })
+      .withMessage("비밀번호는 6자 이상이어야 합니다."),
+    check("newpassword2").custom((value, { req }) => {
+      if (value !== req.body.newpassword) {
+        throw new Error("두개의 비밀번호가 일치하지 않습니다.");
       }
       return true;
     }),

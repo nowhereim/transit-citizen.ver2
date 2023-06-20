@@ -24,7 +24,7 @@ class ListController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ error });
     }
   };
   //노선 리스트
@@ -35,7 +35,7 @@ class ListController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ error });
     }
   };
   //최단경로 조회
@@ -47,7 +47,7 @@ class ListController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ error });
     }
   };
   //채팅 리스트
@@ -58,7 +58,7 @@ class ListController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ error });
     }
   };
 }

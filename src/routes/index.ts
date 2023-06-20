@@ -20,7 +20,7 @@ router.use("/images", authMiddleware, imageRoutes);
 //공지사항 관련 라우터
 router.use("/notice", authMiddleware, noticeRoutes);
 //신고 관련 라우터
-router.use("/report", reportRoutes);
+router.use("/report", authMiddleware, reportRoutes);
 //토큰 재발급 관련 라우터
 router.use("/newtoken", newtokenRoutes);
 

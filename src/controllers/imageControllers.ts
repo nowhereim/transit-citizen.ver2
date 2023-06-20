@@ -16,7 +16,7 @@ class imageControllers {
       res.status(200).send({ url: uploadchatImage });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ error });
     }
   };
 }
