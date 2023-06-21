@@ -13,7 +13,7 @@ router.post(
   "/",
   [
     check("reporter", "신고자는 필수입력입니다.").notEmpty(),
-    check("title", "제목은 필수입력입니다.").notEmpty(),
+    check("reported", "신고당한사람은 필수입력입니다.").notEmpty(),
     check("description", "내용은 필수입력입니다.").notEmpty(),
   ],
   errorCheck,

@@ -1,8 +1,7 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "./index.js";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 import gettime from "../utils/kst.js";
 
-interface MatchedlistAttributes {
+export default interface MatchedlistAttributes {
   id?: number;
   user_id: number;
   matched_user: number;
@@ -12,7 +11,13 @@ interface MatchedlistAttributes {
   created_at?: Promise<Date>;
 }
 
-class Matchedlist extends Model<MatchedlistAttributes> {
+interface MatchedlistCreationAttributes
+  extends Optional<MatchedlistAttributes, "id"> {}
+
+class Matchedlist extends Model<
+  MatchedlistAttributes,
+  MatchedlistCreationAttributes
+> {
   public id!: number;
   public user_id!: number;
   public matched_user!: number;
@@ -39,45 +44,48 @@ class Matchedlist extends Model<MatchedlistAttributes> {
   }
 }
 
-Matchedlist.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      field: "matchedlist_id",
+export const MatchedlistFactory = (
+  sequelize: Sequelize,
+): typeof Matchedlist => {
+  Matchedlist.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: "matchedlist_id",
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      matched_user: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      roomkey: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      chatrequest: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      reputation: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        defaultValue: gettime(),
+      },
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    {
+      sequelize,
+      modelName: "Matchedlist",
+      timestamps: true,
+      underscored: true,
     },
-    matched_user: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    roomkey: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    chatrequest: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    reputation: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: gettime(),
-    },
-  },
-  {
-    sequelize,
-    modelName: "Matchedlist",
-    timestamps: true,
-    underscored: true,
-  },
-);
-// sequelize.sync({ alter: true });
-export default Matchedlist;
+  );
+  return Matchedlist;
+};

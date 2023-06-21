@@ -7,3 +7,4 @@ export { default as Userdeactivations } from "./userdeactivations.js";
 export { default as Notice } from "./notice.js";
 export { default as Station } from "./station.js";
 export { default as sequelize } from "./index.js";
+export { default as age_group } from "./age_group.js";

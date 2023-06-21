@@ -1,14 +1,15 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "./index.js";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-interface NoticeAttributes {
+export default interface NoticeAttributes {
   id?: number;
   title: string;
   tag: string;
   description: string;
 }
 
-class Notice extends Model<NoticeAttributes> {
+interface NoticeCreationAttributes extends Optional<NoticeAttributes, "id"> {}
+
+class Notice extends Model<NoticeAttributes, NoticeCreationAttributes> {
   public id!: number;
   public title!: string;
   public tag!: string;
@@ -21,33 +22,34 @@ class Notice extends Model<NoticeAttributes> {
   }
 }
 
-Notice.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      field: "Notice_id",
+export const NoticeFactory = (sequelize: Sequelize): typeof Notice => {
+  Notice.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: "Notice_id",
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      tag: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    {
+      sequelize,
+      modelName: "Notice",
+      timestamps: true,
+      underscored: true,
     },
-    tag: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    modelName: "Notice",
-    timestamps: true,
-    underscored: true,
-  },
-);
-
-export default Notice;
+  );
+  return Notice;
+};

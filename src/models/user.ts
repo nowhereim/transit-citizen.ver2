@@ -1,7 +1,6 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "./index.js";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-interface UserAttributes {
+export default interface UserAttributes {
   id?: number;
   account: string;
   password: string;
@@ -13,9 +12,24 @@ interface UserAttributes {
   age_group: number;
   createdAt?: Date;
   updatedAt?: Date;
+  dataValues?: {
+    id: number;
+    account: string;
+    password: string;
+    nickname: string;
+    agreepi: boolean;
+    account_type: string;
+    gender: string;
+    introduction: string;
+    age_group: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
 }
 
-class User extends Model<UserAttributes> {
+interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+
+class User extends Model<UserAttributes, UserCreationAttributes> {
   public id!: number;
   public account!: string;
   public password!: string;
@@ -38,7 +52,7 @@ class User extends Model<UserAttributes> {
     });
 
     // Age_group 모델과의 N:1 관계 설정
-    User.belongsTo(models.Age_group, {
+    User.belongsTo(models.Agegroup, {
       foreignKey: "age_group",
       targetKey: "id",
       onDelete: "CASCADE",
@@ -95,34 +109,35 @@ class User extends Model<UserAttributes> {
   }
 }
 
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      field: "user_id",
+export const UserFactory = (sequelize: Sequelize): typeof User => {
+  User.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: "user_id",
+      },
+      account: DataTypes.STRING,
+      password: DataTypes.STRING,
+      nickname: DataTypes.STRING,
+      agreepi: DataTypes.BOOLEAN,
+      account_type: DataTypes.STRING,
+      gender: DataTypes.STRING,
+      introduction: DataTypes.STRING,
+      age_group: DataTypes.INTEGER,
+      createdAt: {
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+      },
     },
-    account: DataTypes.STRING,
-    password: DataTypes.STRING,
-    nickname: DataTypes.STRING,
-    agreepi: DataTypes.BOOLEAN,
-    account_type: DataTypes.STRING,
-    gender: DataTypes.STRING,
-    introduction: DataTypes.STRING,
-    age_group: DataTypes.INTEGER,
-    createdAt: {
-      type: DataTypes.DATE,
+    {
+      sequelize,
+      modelName: "User",
+      underscored: true,
     },
-    updatedAt: {
-      type: DataTypes.DATE,
-    },
-  },
-  {
-    sequelize,
-    modelName: "User",
-    underscored: true,
-  },
-);
-
-export default User;
+  );
+  return User;
+};

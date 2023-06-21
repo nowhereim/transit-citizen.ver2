@@ -1,47 +1,55 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "./index.js";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-interface UserdeactivationsAttributes {
+export default interface UserdeactivationsAttributes {
   id?: number;
   nickname: string;
   reason: string;
 }
 
-class Userdeactivations extends Model<UserdeactivationsAttributes> {
+interface UserdeactivationsCreationAttributes
+  extends Optional<UserdeactivationsAttributes, "id"> {}
+
+class Userdeactivations extends Model<
+  UserdeactivationsAttributes,
+  UserdeactivationsCreationAttributes
+> {
   public id!: number;
   public nickname!: string;
   public reason!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  static associate(models: any) {
+  public static associate(models: any) {
     // Define associations here
   }
 }
 
-Userdeactivations.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      field: "Userdeactivations_id",
+export const UserdeactivationsFactory = (
+  sequelize: Sequelize,
+): typeof Userdeactivations => {
+  Userdeactivations.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: "Userdeactivations_id",
+      },
+      nickname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      reason: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    nickname: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    {
+      sequelize,
+      modelName: "Userdeactivations",
+      timestamps: true,
+      underscored: true,
     },
-    reason: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    modelName: "Userdeactivations",
-    timestamps: true,
-    underscored: true,
-  },
-);
-
-export default Userdeactivations;
+  );
+  return Userdeactivations;
+};

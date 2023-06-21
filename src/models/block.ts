@@ -1,27 +1,30 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "./index.js";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-interface Block_userAttributes {
+export default interface Block_userAttributes {
   id?: number;
   request_user: number;
   block_user: number;
 }
 
-export class Block_user extends Model<Block_userAttributes> {
+interface Block_userCreationAttributes
+  extends Optional<Block_userAttributes, "id"> {}
+
+class Block_user extends Model<
+  Block_userAttributes,
+  Block_userCreationAttributes
+> {
   public id!: number;
   public request_user!: number;
   public block_user!: number;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
 
   public static associate(models: any) {
-    Block_user.belongsTo(models.Users, {
+    Block_user.belongsTo(models.User, {
       foreignKey: "request_user",
       targetKey: "id",
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     });
-    Block_user.belongsTo(models.Users, {
+    Block_user.belongsTo(models.User, {
       foreignKey: "block_user",
       targetKey: "id",
       onDelete: "CASCADE",
@@ -30,23 +33,24 @@ export class Block_user extends Model<Block_userAttributes> {
   }
 }
 
-Block_user.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      field: "Block_user_id",
+export const Block_userFactory = (sequelize: Sequelize): typeof Block_user => {
+  Block_user.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: "Block_user_id",
+      },
+      request_user: DataTypes.INTEGER,
+      block_user: DataTypes.INTEGER,
     },
-    request_user: DataTypes.INTEGER,
-    block_user: DataTypes.INTEGER,
-  },
-  {
-    sequelize,
-    modelName: "Block_user",
-    timestamps: true,
-    underscored: true,
-  },
-);
-
-export default Block_user;
+    {
+      sequelize,
+      modelName: "Block_user",
+      timestamps: true,
+      underscored: true,
+    },
+  );
+  return Block_user;
+};

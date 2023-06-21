@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import ListServices from "../services/listServices.js";
 import logger from "../utils/logger.js";
-import { Station } from "../models/models";
 import {
   Chat,
   matchedInterface,
   shortcutIn,
+  Station,
 } from "../interface/listInterface.js";
 
 class ListController {
@@ -24,7 +24,7 @@ class ListController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
   //노선 리스트
@@ -35,7 +35,7 @@ class ListController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
   //최단경로 조회
@@ -47,7 +47,7 @@ class ListController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
   //채팅 리스트
@@ -58,7 +58,7 @@ class ListController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 }

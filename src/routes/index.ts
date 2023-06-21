@@ -14,13 +14,13 @@ router.use("/user", UserRoutes);
 //소셜 로그인 관련 라우터
 router.use("/social", SocialRoutes);
 //리스트 관련 라우터
-router.use("/list", authMiddleware, listRoutes);
+router.use("/list", listRoutes);
 //채팅 이미지 전송 관련 라우터
-router.use("/images", authMiddleware, imageRoutes);
+router.use("/images", imageRoutes);
 //공지사항 관련 라우터
-router.use("/notice", authMiddleware, noticeRoutes);
+router.use("/notice", noticeRoutes);
 //신고 관련 라우터
-router.use("/report", authMiddleware, reportRoutes);
+router.use("/report", reportRoutes);
 //토큰 재발급 관련 라우터
 router.use("/newtoken", newtokenRoutes);
 

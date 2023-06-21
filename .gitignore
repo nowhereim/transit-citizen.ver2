@@ -45,3 +45,4 @@ package-lock.json
 station
 views
 socket
+src/models/index.ts

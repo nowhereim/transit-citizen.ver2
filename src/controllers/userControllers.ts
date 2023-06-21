@@ -28,7 +28,7 @@ class UserController {
       return res.status(200).send({ msg: "성공" });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -41,7 +41,7 @@ class UserController {
       return res.status(200).send({ msg: "사용 가능한 아이디 입니다." });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -57,7 +57,7 @@ class UserController {
       return res.status(200).send({ msg: "사용 가능한 닉네임 입니다." });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -68,7 +68,7 @@ class UserController {
       res.status(200).send({ data: userData });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -79,7 +79,7 @@ class UserController {
       res.status(200).send({ userInfo: userInfo });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -105,7 +105,7 @@ class UserController {
       res.status(200).send({ msg: uploadImage });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -120,7 +120,7 @@ class UserController {
       res.status(200).send({ msg: editUserInfo });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -135,7 +135,7 @@ class UserController {
       res.status(200).send({ msg: "성공" });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -150,7 +150,7 @@ class UserController {
       res.status(200).send({ msg: patchImages });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -164,7 +164,7 @@ class UserController {
       res.status(200).send({ msg: sendEmail });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -179,7 +179,7 @@ class UserController {
       res.status(200).send({ msg: authCodeCheck });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -194,7 +194,7 @@ class UserController {
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
   resetPassword = async (req: Request, res: Response) => {
@@ -205,7 +205,7 @@ class UserController {
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -218,7 +218,7 @@ class UserController {
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -233,7 +233,7 @@ class UserController {
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -244,7 +244,7 @@ class UserController {
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -259,7 +259,7 @@ class UserController {
       res.status(200).send({ result: "성공" });
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 }

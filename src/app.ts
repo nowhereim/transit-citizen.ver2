@@ -19,7 +19,7 @@ import ejs from "ejs";
 import path from "path";
 import initializeSocket from "./socket/socket.js";
 initializeSocket(server);
-//TODO: 매주 노선정보 업데이트 활성화
+//TODO: 배포시 매주 노선정보 업데이트 활성화
 // const weeklyJob = schedule.scheduleJob("0 0 * * 0", () => {
 //   logger.info("Updating stations...");
 //   updateStations();
@@ -37,8 +37,9 @@ app.use(helmet.xssFilter());
 app.use(
   cors({
     origin: [
-      "https://team4-final-project.vercel.app/",
-      "http://localhost:4921",
+      "https://team4-final-project.vercel.app",
+      "https://mijutaehwan.shop",
+      "http://localhost:3000",
     ],
     credentials: true,
   }),

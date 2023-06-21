@@ -17,7 +17,7 @@ class ReportController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 
@@ -27,7 +27,7 @@ class ReportController {
       res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);
-      res.status(400).json({ error });
+      res.status(400).json({ error: error.message });
     }
   };
 }

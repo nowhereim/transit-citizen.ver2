@@ -1,7 +1,6 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "./index.js";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-interface ReportAttributes {
+export default interface ReportAttributes {
   id?: number;
   reporter: number;
   reported: number | null;
@@ -10,7 +9,9 @@ interface ReportAttributes {
   images?: string;
 }
 
-class Report extends Model<ReportAttributes> {
+interface ReportCreationAttributes extends Optional<ReportAttributes, "id"> {}
+
+class Report extends Model<ReportAttributes, ReportCreationAttributes> {
   public id!: number;
   public reporter!: number;
   public reported!: number | null;
@@ -36,40 +37,41 @@ class Report extends Model<ReportAttributes> {
   }
 }
 
-Report.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      field: "Report_id",
+export const ReportFactory = (sequelize: Sequelize): typeof Report => {
+  Report.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: "Report_id",
+      },
+      reporter: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      reported: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      images: {
+        type: DataTypes.STRING,
+      },
     },
-    reporter: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    {
+      sequelize,
+      modelName: "Report",
+      timestamps: true,
+      underscored: true,
     },
-    reported: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    images: {
-      type: DataTypes.STRING,
-    },
-  },
-  {
-    sequelize,
-    modelName: "Report",
-    timestamps: true,
-    underscored: true,
-  },
-);
-
-export default Report;
+  );
+  return Report;
+};

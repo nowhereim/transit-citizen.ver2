@@ -1,20 +1,19 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "./index.js";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-interface ImageAttributes {
+export default interface ImageAttributes {
   id?: number;
   user_id: number;
   image_url: string;
   is_primary: boolean;
 }
 
-class Image extends Model<ImageAttributes> {
+interface ImageCreationAttributes extends Optional<ImageAttributes, "id"> {}
+
+class Image extends Model<ImageAttributes, ImageCreationAttributes> {
   public id!: number;
   public user_id!: number;
   public image_url!: string;
   public is_primary!: boolean;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
 
   public static associate(models: any) {
     Image.belongsTo(models.User, {
@@ -26,33 +25,34 @@ class Image extends Model<ImageAttributes> {
   }
 }
 
-Image.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      field: "image_id",
+export const ImageFactory = (sequelize: Sequelize): typeof Image => {
+  Image.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: "image_id",
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      image_url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      is_primary: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    {
+      sequelize,
+      modelName: "Image",
+      timestamps: true,
+      underscored: true,
     },
-    image_url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    is_primary: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-  },
-  {
-    sequelize,
-    modelName: "Image",
-    timestamps: true,
-    underscored: true,
-  },
-);
-
-export default Image;
+  );
+  return Image;
+};

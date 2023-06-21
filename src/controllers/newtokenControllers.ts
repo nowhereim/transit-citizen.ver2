@@ -20,7 +20,7 @@ class NewtokenControllers {
     } catch (error: any) {
       logger.error(error);
       return res.status(401).send({
-        error,
+        error: error.message,
       });
     }
   };

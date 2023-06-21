@@ -57,7 +57,7 @@ router.post("/checkid", userControllers.userIdCheck);
 router.post("/checknickname", userControllers.userNicknameCheck);
 
 // 유저 정보 조회
-router.get("/:id", userControllers.showUserInfo);
+router.get("/:id", authMiddleware, userControllers.showUserInfo);
 
 // 유저 정보 수정
 router.patch(
