@@ -13,9 +13,9 @@ class Block_user extends Model<
   Block_userAttributes,
   Block_userCreationAttributes
 > {
-  public id!: number;
-  public request_user!: number;
-  public block_user!: number;
+  // public id!: number;
+  // public request_user!: number;
+  // public block_user!: number;
 
   public static associate(models: any) {
     Block_user.belongsTo(models.User, {
@@ -40,7 +40,7 @@ export const Block_userFactory = (sequelize: Sequelize): typeof Block_user => {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        field: "Block_user_id",
+        field: "Blockuser_id",
       },
       request_user: DataTypes.INTEGER,
       block_user: DataTypes.INTEGER,

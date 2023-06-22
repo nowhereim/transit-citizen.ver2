@@ -30,17 +30,17 @@ export default interface UserAttributes {
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
 class User extends Model<UserAttributes, UserCreationAttributes> {
-  public id!: number;
-  public account!: string;
-  public password!: string;
-  public nickname!: string;
-  public agreepi!: boolean;
-  public account_type!: string;
-  public gender!: string;
-  public introduction!: string;
-  public age_group!: number;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  // public id!: number;
+  // public account!: string;
+  // public password!: string;
+  // public nickname!: string;
+  // public agreepi!: boolean;
+  // public account_type!: string;
+  // public gender!: string;
+  // public introduction!: string;
+  // public age_group!: number;
+  // public readonly createdAt!: Date;
+  // public readonly updatedAt!: Date;
 
   public static associate(models: any) {
     // Image 모델과의 1:N 관계 설정

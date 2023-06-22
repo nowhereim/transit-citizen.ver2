@@ -12,14 +12,14 @@ export default interface ReportAttributes {
 interface ReportCreationAttributes extends Optional<ReportAttributes, "id"> {}
 
 class Report extends Model<ReportAttributes, ReportCreationAttributes> {
-  public id!: number;
-  public reporter!: number;
-  public reported!: number | null;
-  public title!: string;
-  public description!: string;
-  public images?: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  // public id!: number;
+  // public reporter!: number;
+  // public reported!: number | null;
+  // public title!: string;
+  // public description!: string;
+  // public images?: string;
+  // public readonly createdAt!: Date;
+  // public readonly updatedAt!: Date;
 
   public static associate(models: any) {
     Report.belongsTo(models.User, {

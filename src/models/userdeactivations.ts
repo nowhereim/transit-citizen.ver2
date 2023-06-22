@@ -13,11 +13,11 @@ class Userdeactivations extends Model<
   UserdeactivationsAttributes,
   UserdeactivationsCreationAttributes
 > {
-  public id!: number;
-  public nickname!: string;
-  public reason!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  // public id!: number;
+  // public nickname!: string;
+  // public reason!: string;
+  // public readonly createdAt!: Date;
+  // public readonly updatedAt!: Date;
 
   public static associate(models: any) {
     // Define associations here

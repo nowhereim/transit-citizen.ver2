@@ -18,15 +18,15 @@ class Matchedlist extends Model<
   MatchedlistAttributes,
   MatchedlistCreationAttributes
 > {
-  public id!: number;
-  public user_id!: number;
-  public matched_user!: number;
-  public roomkey!: string;
-  public chatrequest?: string;
-  public reputation?: boolean;
-  public created_at!: Promise<Date>;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  // public id!: number;
+  // public user_id!: number;
+  // public matched_user!: number;
+  // public roomkey!: string;
+  // public chatrequest?: string;
+  // public reputation?: boolean;
+  // public created_at!: Promise<Date>;
+  // public readonly createdAt!: Date;
+  // public readonly updatedAt!: Date;
 
   public static associate(models: any) {
     Matchedlist.belongsTo(models.User, {

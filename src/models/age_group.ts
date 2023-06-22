@@ -9,8 +9,8 @@ interface AgegroupCreationAttributes
   extends Optional<AgegroupAttributes, "id"> {}
 
 class Agegroup extends Model<AgegroupAttributes, AgegroupCreationAttributes> {
-  public id!: number;
-  public age_group!: string;
+  // public id!: number;
+  // public age_group!: string;
 
   public static associate(models: any) {
     Agegroup.hasMany(models.User, {

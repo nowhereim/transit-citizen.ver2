@@ -10,10 +10,10 @@ export default interface ImageAttributes {
 interface ImageCreationAttributes extends Optional<ImageAttributes, "id"> {}
 
 class Image extends Model<ImageAttributes, ImageCreationAttributes> {
-  public id!: number;
-  public user_id!: number;
-  public image_url!: string;
-  public is_primary!: boolean;
+  // public id!: number;
+  // public user_id!: number;
+  // public image_url!: string;
+  // public is_primary!: boolean;
 
   public static associate(models: any) {
     Image.belongsTo(models.User, {
