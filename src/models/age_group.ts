@@ -1,19 +1,22 @@
 import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-export default interface AgegroupAttributes {
+export default interface Age_groupAttributes {
   id?: number;
   age_group: string;
 }
 
-interface AgegroupCreationAttributes
-  extends Optional<AgegroupAttributes, "id"> {}
+interface Age_groupCreationAttributes
+  extends Optional<Age_groupAttributes, "id"> {}
 
-class Agegroup extends Model<AgegroupAttributes, AgegroupCreationAttributes> {
+class Age_group extends Model<
+  Age_groupAttributes,
+  Age_groupCreationAttributes
+> {
   // public id!: number;
   // public age_group!: string;
 
   public static associate(models: any) {
-    Agegroup.hasMany(models.User, {
+    Age_group.hasMany(models.User, {
       foreignKey: "age_group",
       sourceKey: "id",
       onDelete: "CASCADE",
@@ -22,8 +25,8 @@ class Agegroup extends Model<AgegroupAttributes, AgegroupCreationAttributes> {
   }
 }
 
-export const AgegroupFactory = (sequelize: Sequelize): typeof Agegroup => {
-  Agegroup.init(
+export const Age_groupFactory = (sequelize: Sequelize): typeof Age_group => {
+  Age_group.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -38,10 +41,10 @@ export const AgegroupFactory = (sequelize: Sequelize): typeof Agegroup => {
     },
     {
       sequelize,
-      modelName: "Agegroup",
+      modelName: "Age_group",
       timestamps: true,
       underscored: true,
     },
   );
-  return Agegroup;
+  return Age_group;
 };

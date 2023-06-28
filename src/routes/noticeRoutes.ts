@@ -45,4 +45,7 @@ router.delete(
   noticeControllers.deleteNotice,
 );
 
+// 알람 조회
+router.get("/alarm/:userid", noticeControllers.showAlarm);
+
 export default router;

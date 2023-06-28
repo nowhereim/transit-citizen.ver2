@@ -51,7 +51,7 @@ export interface loginValInterface {
 }
 
 export interface imageInterface {
-  result: [Image];
+  result: Image[];
 }
 
 export interface resultInterface {

@@ -57,7 +57,13 @@ router.post("/checkid", userControllers.userIdCheck);
 router.post("/checknickname", userControllers.userNicknameCheck);
 
 // 유저 정보 조회
-router.get("/:id", authMiddleware, userControllers.showUserInfo);
+router.get(
+  "/:id",
+  [check("id", "id는 필수입력입니다.").notEmpty()],
+  authMiddleware,
+  errorCheck,
+  userControllers.showUserInfo,
+);
 
 // 유저 정보 수정
 router.patch(
@@ -115,6 +121,22 @@ router.patch(
   authMiddleware,
   errorCheck,
   userControllers.reputation,
+);
+
+//대화요청상태변경
+router.patch(
+  "/chatstatus",
+  [
+    check("matchedlist_id", "matchedlist_id는 필수입력입니다.").notEmpty(),
+    check("chatrequest", "chatrequest는 필수입력입니다.").notEmpty(),
+    check("my_id", "my_id는 필수입력입니다.").notEmpty(),
+    check("other_id", "other_id는 필수입력입니다.").notEmpty(),
+    check("my_nickname", "my_nickname는 필수입력입니다.").notEmpty(),
+    check("other_nickname", "other_nickname는 필수입력입니다.").notEmpty(),
+  ],
+  authMiddleware,
+  errorCheck,
+  userControllers.changeChatStatus,
 );
 
 // 비밀번호 변경

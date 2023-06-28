@@ -6,7 +6,7 @@ import { createServer } from "http";
 const server = createServer(app);
 import helmet from "helmet";
 import morgan from "morgan";
-// import updateStations from "./src/utils/updateStations";
+import updateStations from "./station/station.js";
 import schedule from "node-schedule";
 import dotenv from "dotenv";
 import collection from "./mongodb/mongodb.js";
@@ -20,10 +20,10 @@ import path from "path";
 import initializeSocket from "./socket/socket.js";
 initializeSocket(server);
 //TODO: 배포시 매주 노선정보 업데이트 활성화
-// const weeklyJob = schedule.scheduleJob("0 0 * * 0", () => {
-//   logger.info("Updating stations...");
-//   updateStations();
-// });
+const weeklyJob = schedule.scheduleJob("0 0 * * 0", () => {
+  logger.info("Updating stations...");
+  updateStations();
+});
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "./swagger_output.json" assert { type: "json" };
 

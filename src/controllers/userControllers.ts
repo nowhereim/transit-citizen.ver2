@@ -262,6 +262,18 @@ class UserController {
       res.status(400).json({ error: error.message });
     }
   };
+
+  changeChatStatus = async (req: Request, res: Response) => {
+    try {
+      const val = req.body;
+      const changeChatStatus: resultInterface =
+        await this.userServices.changeChatStatus(val);
+      res.status(200).send({ result: "성공" });
+    } catch (error: any) {
+      logger.error(error);
+      res.status(400).json({ error: error.message });
+    }
+  };
 }
 
 export default UserController;

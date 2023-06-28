@@ -40,7 +40,7 @@ export const Block_userFactory = (sequelize: Sequelize): typeof Block_user => {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        field: "Blockuser_id",
+        field: "blockuser_id",
       },
       request_user: DataTypes.INTEGER,
       block_user: DataTypes.INTEGER,

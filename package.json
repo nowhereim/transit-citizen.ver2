@@ -5,7 +5,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "pm2 start dist/app.js --watch",
+    "start": "pm2 start dist/app.js",
     "build": "tsc -p .",
     "watch": "tsc -w",
     "dev": "nodemon"
@@ -51,6 +51,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.3.5",
+    "node-schedule": "^2.1.1",
     "nodemailer": "^6.9.3",
     "pm2": "^5.3.0",
     "redis": "^4.6.7",

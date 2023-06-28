@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import NoticeServices from "../services/noticeServices.js";
 import logger from "../utils/logger.js";
-import { Notice } from "../interface/noticeInterface.js";
+import { Notice, Alarm } from "../interface/noticeInterface.js";
 
 class NoticeControllers {
   private noticeServices: NoticeServices;
@@ -64,6 +64,17 @@ class NoticeControllers {
     try {
       const { noticeid } = req.params;
       const result: string = await this.noticeServices.deleteNotice(noticeid);
+      return res.status(200).send(result);
+    } catch (error: any) {
+      logger.error(error);
+      return res.status(400).json({ error: error.message });
+    }
+  };
+
+  showAlarm = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userid } = req.params;
+      const result: Alarm[] = await this.noticeServices.showAlarm(userid);
       return res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);

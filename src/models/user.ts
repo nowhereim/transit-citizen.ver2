@@ -1,4 +1,5 @@
 import { Sequelize, DataTypes, Model, Optional } from "sequelize";
+import models, { sequelize } from ".";
 
 export default interface UserAttributes {
   id?: number;
@@ -106,6 +107,13 @@ class User extends Model<UserAttributes, UserCreationAttributes> {
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     });
+
+    User.hasMany(models.Alarm, {
+      foreignKey: "user_id",
+      sourceKey: "id",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
   }
 }
 
@@ -139,5 +147,6 @@ export const UserFactory = (sequelize: Sequelize): typeof User => {
       underscored: true,
     },
   );
+  // User.sync({ alter: true });
   return User;
 };
