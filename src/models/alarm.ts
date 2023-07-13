@@ -7,6 +7,7 @@ export default interface AlarmAttributes {
   user_id: number;
   public: boolean;
   dataValues?: any;
+  check?: boolean;
 }
 
 interface AlarmCreationAttributes extends Optional<AlarmAttributes, "id"> {}
@@ -44,6 +45,10 @@ export const AlarmFactory = (sequelize: Sequelize): typeof Alarm => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      check: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
     },
     {
       sequelize,
@@ -52,7 +57,7 @@ export const AlarmFactory = (sequelize: Sequelize): typeof Alarm => {
       underscored: true,
     },
   );
-  //   Alarm.sync({ alter: true });
+  // Alarm.sync({ alter: true });
 
   return Alarm;
 };

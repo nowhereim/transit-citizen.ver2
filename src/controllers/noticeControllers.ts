@@ -73,8 +73,19 @@ class NoticeControllers {
 
   showAlarm = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { cursor } = req.params;
+      const result: any = await this.noticeServices.showAlarm(cursor);
+      return res.status(200).send(result);
+    } catch (error: any) {
+      logger.error(error);
+      return res.status(400).json({ error: error.message });
+    }
+  };
+
+  checkAlarm = async (req: Request, res: Response, next: NextFunction) => {
+    try {
       const { userid } = req.params;
-      const result: Alarm[] = await this.noticeServices.showAlarm(userid);
+      const result = await this.noticeServices.checkAlarm(userid);
       return res.status(200).send(result);
     } catch (error: any) {
       logger.error(error);

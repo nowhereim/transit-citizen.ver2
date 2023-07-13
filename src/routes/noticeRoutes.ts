@@ -46,6 +46,9 @@ router.delete(
 );
 
 // 알람 조회
-router.get("/alarm/:userid", noticeControllers.showAlarm);
+router.get("/alarm/:cursor", noticeControllers.showAlarm);
+
+// 알람 확인
+router.patch("/alarm/check/:userid", noticeControllers.checkAlarm);
 
 export default router;
