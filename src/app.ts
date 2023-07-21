@@ -13,10 +13,7 @@ import collection from "./mongodb/mongodb.js";
 dotenv.config();
 const port = process.env.PORT || 3000;
 collection;
-import sequelize from "./models/index.js";
 import logger from "./utils/logger.js";
-import ejs from "ejs";
-import path from "path";
 import initializeSocket from "./socket/socket.js";
 initializeSocket(server);
 //TODO: 배포시 매주 노선정보 업데이트 활성화
@@ -34,16 +31,8 @@ app.use(helmet.hsts());
 app.use(helmet.referrerPolicy());
 app.use(helmet.xssFilter());
 
-app.use(
-  cors({
-    origin: [
-      "https://team4-final-project.vercel.app",
-      "https://mijutaehwan.shop",
-      "http://localhost:3000",
-    ],
-    credentials: true,
-  }),
-);
+app.use(cors({}));
+
 //TODO: 채팅 사운드 처리 여부 결정
 // app.use("/sound", express.static("sound"));
 app.set("view engine", "ejs");

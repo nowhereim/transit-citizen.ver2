@@ -145,8 +145,14 @@ export const UserFactory = (sequelize: Sequelize): typeof User => {
       sequelize,
       modelName: "User",
       underscored: true,
+      indexes: [
+        {
+          unique: true,
+          fields: ["account"],
+        },
+      ],
     },
   );
-  // User.sync({ alter: true });
+  User.sync({ alter: true });
   return User;
 };

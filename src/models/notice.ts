@@ -49,6 +49,11 @@ export const NoticeFactory = (sequelize: Sequelize): typeof Notice => {
       modelName: "Notice",
       timestamps: true,
       underscored: true,
+      indexes: [
+        {
+          fields: ["public"],
+        },
+      ],
     },
   );
   return Notice;

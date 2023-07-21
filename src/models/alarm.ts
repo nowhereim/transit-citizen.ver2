@@ -55,6 +55,11 @@ export const AlarmFactory = (sequelize: Sequelize): typeof Alarm => {
       modelName: "Alarm",
       timestamps: true,
       underscored: true,
+      indexes: [
+        {
+          fields: ["public"],
+        },
+      ],
     },
   );
   // Alarm.sync({ alter: true });
