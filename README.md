@@ -28,7 +28,7 @@
 
 - 협업 도구: [Figma](https://www.figma.com/file/7dw1O2FbYsMeAV5jq9dwd1/%ED%99%98%EC%8A%B9%EC%8B%9C%EB%AF%BC-Ver2-%ED%94%BC%EA%B7%B8%EB%A7%88?type=design&node-id=27%3A726&mode=design&t=veiFKJ6qJDUGM7nL-1), Notion, Gather , Slack
 
-### 배포
+### 클라우드
 
 - AWS EC2 , ROUTE 53 , RDS , Mongodb atlas
 
